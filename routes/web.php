@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 
 
 
@@ -30,6 +31,15 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
     Route::get('/admin/brands/edit/{brand}', [BrandController::class, 'edit'])->name('admin.brands.edit');
     Route::put('/admin/brands/update/{brand}', [BrandController::class, 'update'])->name('admin.brands.update');
     Route::delete('/admin/brands/destroy/{brand}', [BrandController::class, 'destroy'])->name('admin.brands.destroy');
+
+    //category routes
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
+    Route::post('/admin/categories/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/admin/categories/edit/{category}', [CategoryController::class, 'edit'])->name('admin.categories.edit');
+    Route::put('/admin/categories/update/{category}', [CategoryController::class, 'update'])->name('admin.categories.update');
+    Route::delete('/admin/categories/destroy/{category}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
 });
 
 

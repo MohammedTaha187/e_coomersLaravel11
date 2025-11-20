@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/home/muhammad/.config/herd-lite/bin/php",
+            "args": [
+                "/home/muhammad/Downloads/E-Commerce-Project-Blade/E-Commerce-Project-BladeLaravel11/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

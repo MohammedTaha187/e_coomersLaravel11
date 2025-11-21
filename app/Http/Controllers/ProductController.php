@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,7 +16,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = product::orderBy('id', 'DESC')->paginate(10);
+        $categories = Category::orderBy('name')->get();
+        $brands = Brand::orderBy('name')->get();
+
+        return view('admin.products.index', compact('products', 'categories', 'brands'));
     }
 
     /**
@@ -21,7 +28,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::orderBy('name')->get();
+        $brands = Brand::orderBy('name')->get();
+
+        return view('admin.products.create', compact('categories', 'brands'));
     }
 
     /**
@@ -29,7 +39,30 @@ class ProductController extends Controller
      */
     public function store(StoreproductRequest $request)
     {
-        //
+
+        $product = new product();
+        $product->name = $request->name;
+        $product->slug = $request->slug;
+        $product->short_description = $request->short_description;
+        $product->description = $request->description;
+        $product->price = $request->regular_price;
+        $product->sale_price = $request->sale_price;
+        $product->sku = $request->sku;
+        $product->featured = $request->featured;
+        $product->stock = $request->stock_status;
+        $product->quantity = $request->quantity;
+        $product->brand_id = $request->brand_id;
+        $product->category_id = $request->category_id;
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs('images/products', $imageName, 'public');
+            $product->image = $path;
+        }
+
+        $product->save();
+
+        return redirect()->route('admin.products')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -45,7 +78,10 @@ class ProductController extends Controller
      */
     public function edit(product $product)
     {
-        //
+        $categories = Category::orderBy('name')->get();
+        $brands = Brand::orderBy('name')->get();
+
+        return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
     /**
@@ -53,7 +89,28 @@ class ProductController extends Controller
      */
     public function update(UpdateproductRequest $request, product $product)
     {
-        //
+        $product->name = $request->name;
+        $product->slug = $request->slug;
+        $product->short_description = $request->short_description;
+        $product->description = $request->description;
+        $product->price = $request->regular_price;
+        $product->sale_price = $request->sale_price;
+        $product->sku = $request->sku;
+        $product->featured = $request->featured;
+        $product->stock = $request->stock_status;
+        $product->quantity = $request->quantity;
+        $product->brand_id = $request->brand_id;
+        $product->category_id = $request->category_id;
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs('images/products', $imageName, 'public');
+            $product->image = $path;
+        }
+
+        $product->save();
+
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -61,6 +118,11 @@ class ProductController extends Controller
      */
     public function destroy(product $product)
     {
-        //
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+        $product->delete();
+
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
     }
 }

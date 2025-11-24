@@ -116,6 +116,26 @@
                         </div>
                     </fieldset>
 
+                    <fieldset>
+                        <div class="body-title mb-10">Upload Gallery Images</div>
+                        <div class="upload-image mb-16">
+                            <div id="galPreview" class="flex gap-2 flex-wrap"></div>
+                            <div id="galUpload" class="item up-load">
+                                <label class="uploadfile" for="galleryImages">
+                                    <span class="icon">
+                                        <i class="icon-upload-cloud"></i>
+                                    </span>
+                                    <span class="text-tiny">
+                                        Drop your images here or select
+                                        <span class="tf-color">click to browse</span>
+                                        <br> (Max 10 images)
+                                    </span>
+                                    <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*" multiple>
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
                     <div class="cols gap22">
                         <fieldset class="name">
                             <div class="body-title mb-10">Regular Price <span class="tf-color-1">*</span></div>
@@ -201,6 +221,29 @@
                     }
                 });
             }
+        });
+        const galleryInput = document.getElementById('galleryImages');
+        const galPreview = document.getElementById('galPreview');
+
+        galleryInput.addEventListener('change', function() {
+            galPreview.innerHTML = ''; // تفريغ الـ Preview القديم
+            const files = this.files;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    img.style.border = '1px solid #ccc';
+                    img.style.borderRadius = '5px';
+                    img.style.marginRight = '5px';
+                    img.style.marginBottom = '5px';
+                    galPreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
         });
     </script>
 @endpush

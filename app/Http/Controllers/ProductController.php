@@ -6,7 +6,8 @@ use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\product;
+use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -62,21 +63,32 @@ class ProductController extends Controller
 
         $product->save();
 
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                $path = $image->storeAs('images/galleries', $imageName, 'public');
+
+                $product->galleries()->create([
+                    'image' => $path
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products')->with('success', 'Product created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(product $product)
+    public function show(Product $product)
     {
-        //
+        return view('admin.products.show', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(product $product)
+    public function edit(Product $product)
     {
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('name')->get();
@@ -87,7 +99,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateproductRequest $request, product $product)
+    public function update(UpdateproductRequest $request, Product $product)
     {
         $product->name = $request->name;
         $product->slug = $request->slug;
@@ -110,13 +122,24 @@ class ProductController extends Controller
 
         $product->save();
 
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                $path = $image->storeAs('images/galleries', $imageName, 'public');
+
+                $product->galleries()->create([
+                    'image' => $path
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(product $product)
+    public function destroy(Product $product)
     {
         if ($product->image && Storage::disk('public')->exists($product->image)) {
             Storage::disk('public')->delete($product->image);
@@ -124,5 +147,20 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+    }
+
+    public function search(Request $request)
+    {
+        $search = trim($request->input('search'));
+
+        $products = Product::when($search, function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('slug', 'LIKE', "%{$search}%");
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->appends(['search' => $search]);
+
+        return view('admin.products.index', compact('products'));
     }
 }

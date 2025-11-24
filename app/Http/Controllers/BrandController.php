@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BrandController extends Controller
 {
@@ -97,5 +98,21 @@ class BrandController extends Controller
 
         $brand->delete();
         return redirect()->route('admin.brands')->with('success', 'Brand deleted successfully.');
+    }
+
+
+    public function search(Request $request)
+    {
+        $search = trim($request->input('search'));
+
+        $brands = Brand::when($search, function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('slug', 'LIKE', "%{$search}%");
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->appends(['search' => $search]);
+
+        return view('admin.brands.index', compact('brands'));
     }
 }

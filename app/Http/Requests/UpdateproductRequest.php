@@ -35,6 +35,8 @@ class UpdateproductRequest extends FormRequest
             'quantity' => 'required|integer|min:0',
             'brand_id' => 'required|exists:brands,id',
             'category_id' => 'required|exists:categories,id',
+            'gallery_images' => 'nullable|array|max:10',
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
 }

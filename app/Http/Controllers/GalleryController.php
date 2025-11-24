@@ -6,6 +6,7 @@ use App\Http\Requests\StoreGalleryRequest;
 use App\Http\Requests\UpdateGalleryRequest;
 use App\Models\Gallery;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
@@ -28,16 +29,14 @@ class GalleryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreGalleryRequest $request, $productId)
+    public function store(StoreGalleryRequest $request, Product $product)
     {
-        $product = Product::findOrFail($productId);
-
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
                 $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
                 $path = $image->storeAs('images/galleries', $imageName, 'public');
 
-                $product->gallery()->create([
+                $product->galleries()->create([
                     'image' => $path
                 ]);
             }
@@ -45,7 +44,6 @@ class GalleryController extends Controller
 
         return redirect()->back()->with('success', 'Gallery images uploaded successfully.');
     }
-
 
     /**
      * Display the specified resource.
@@ -68,20 +66,8 @@ class GalleryController extends Controller
      */
     public function update(UpdateGalleryRequest $request, $productId)
     {
-        $product = Product::findOrFail($productId);
-
-        if ($request->hasFile('gallery_images')) {
-            foreach ($request->file('gallery_images') as $image) {
-                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
-                $path = $image->storeAs('images/galleries', $imageName, 'public');
-
-                $product->gallery()->create([
-                    'image' => $path
-                ]);
-            }
-        }
-
-        return redirect()->back()->with('success', 'Gallery images updated successfully.');
+        // This seems redundant if we are just uploading new images via store
+        // But keeping it for now if needed, though usually gallery update is add/delete
     }
 
 
@@ -90,6 +76,10 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery)
     {
-        //
+        if ($gallery->image && Storage::disk('public')->exists($gallery->image)) {
+            Storage::disk('public')->delete($gallery->image);
+        }
+        $gallery->delete();
+        return redirect()->back()->with('success', 'Gallery image deleted successfully.');
     }
 }

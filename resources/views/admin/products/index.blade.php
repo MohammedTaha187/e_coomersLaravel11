@@ -21,7 +21,9 @@
                         <i class="icon-chevron-right"></i>
                     </li>
                     <li>
-                        <div class="text-tiny">All Products</div>
+                        <a href="{{ route('admin.products') }}">
+                            <div class="text-tiny">All Products</div>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -29,10 +31,10 @@
             <div class="wg-box">
                 <div class="flex items-center justify-between gap10 flex-wrap">
                     <div class="wg-filter flex-grow">
-                        <form class="form-search">
+                        <form class="form-search" action="{{ route('admin.products.search') }}" method="GET">
                             <fieldset class="name">
-                                <input type="text" placeholder="Search here..." class="" name="name"
-                                    tabindex="2" value="" aria-required="true" required="">
+                                <input type="text" placeholder="Search here..." class="" name="search"
+                                    tabindex="2" value="{{ request()->query('search') }}" aria-required="true" required="">
                             </fieldset>
                             <div class="button-submit">
                                 <button class="" type="submit"><i class="icon-search"></i></button>
@@ -69,7 +71,7 @@
                                                 alt="{{ $product->name }}" class="image">
                                         </div>
                                         <div class="name">
-                                            <div class="text-tiny mt-3">{{ $product->name }}</div>
+                                            <div class="body-title-2">{{ $product->name }}</div>
                                         </div>
                                     </td>
                                     <td>{{ $product->price }}</td>
@@ -86,7 +88,7 @@
                                     <td>{{ $product->quantity }}</td>
                                     <td>
                                         <div class="list-icon-function">
-                                            <a href="#" target="_blank">
+                                            <a href="{{ route('admin.products.show', $product->id) }}">
                                                 <div class="item eye">
                                                     <i class="icon-eye"></i>
                                                 </div>

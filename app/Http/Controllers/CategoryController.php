@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -89,5 +90,20 @@ class CategoryController extends Controller
         }
         $category->delete();
         return redirect()->route('admin.categories')->with('success', 'Category deleted successfully.');
+    }
+
+    public function search(Request $request)
+    {
+        $search = trim($request->input('search'));
+
+        $categorys = Category::when($search, function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('slug', 'LIKE', "%{$search}%");
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(10)
+            ->appends(['search' => $search]);
+
+        return view('admin.category.index', compact('categorys'));
     }
 }

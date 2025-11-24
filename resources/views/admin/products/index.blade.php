@@ -34,7 +34,8 @@
                         <form class="form-search" action="{{ route('admin.products.search') }}" method="GET">
                             <fieldset class="name">
                                 <input type="text" placeholder="Search here..." class="" name="search"
-                                    tabindex="2" value="{{ request()->query('search') }}" aria-required="true" required="">
+                                    tabindex="2" value="{{ request()->query('search') }}" aria-required="true"
+                                    required="">
                             </fieldset>
                             <div class="button-submit">
                                 <button class="" type="submit"><i class="icon-search"></i></button>

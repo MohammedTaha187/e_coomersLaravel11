@@ -130,7 +130,8 @@
                                         <span class="tf-color">click to browse</span>
                                         <br> (Max 10 images)
                                     </span>
-                                    <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*" multiple>
+                                    <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*"
+                                        multiple>
                                 </label>
                             </div>
                         </div>

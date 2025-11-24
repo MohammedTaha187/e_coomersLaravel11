@@ -34,14 +34,16 @@
                         <div class="product-images">
                             <div class="main-image mb-4">
                                 <img src="{{ $product->image ? Storage::url($product->image) : asset('images/placeholder.png') }}"
-                                    alt="{{ $product->name }}" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;">
+                                    alt="{{ $product->name }}" class="img-fluid rounded"
+                                    style="max-height: 400px; width: 100%; object-fit: cover;">
                             </div>
-                            @if($product->galleries->count() > 0)
+                            @if ($product->galleries->count() > 0)
                                 <div class="gallery-images d-flex gap-2 flex-wrap">
-                                    @foreach($product->galleries as $gallery)
+                                    @foreach ($product->galleries as $gallery)
                                         <div class="gallery-item" style="width: 100px; height: 100px;">
                                             <img src="{{ Storage::url($gallery->image) }}" alt="Gallery Image"
-                                                class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;">
+                                                class="img-fluid rounded"
+                                                style="width: 100%; height: 100%; object-fit: cover;">
                                         </div>
                                     @endforeach
                                 </div>
@@ -54,7 +56,7 @@
                             <p class="text-muted mb-4">Slug: {{ $product->slug }}</p>
 
                             <div class="price mb-4">
-                                @if($product->sale_price)
+                                @if ($product->sale_price)
                                     <span class="h4 text-danger me-2">${{ $product->sale_price }}</span>
                                     <span class="text-muted text-decoration-line-through">${{ $product->price }}</span>
                                 @else
@@ -66,8 +68,9 @@
                                 <p><strong>SKU:</strong> {{ $product->sku }}</p>
                                 <p><strong>Category:</strong> {{ $product->category->name ?? 'Uncategorized' }}</p>
                                 <p><strong>Brand:</strong> {{ $product->brand->name ?? 'No Brand' }}</p>
-                                <p><strong>Stock Status:</strong> 
-                                    <span class="badge {{ $product->stock_status == 'instock' ? 'bg-success' : 'bg-danger' }}">
+                                <p><strong>Stock Status:</strong>
+                                    <span
+                                        class="badge {{ $product->stock_status == 'instock' ? 'bg-success' : 'bg-danger' }}">
                                         {{ $product->stock_status }}
                                     </span>
                                 </p>

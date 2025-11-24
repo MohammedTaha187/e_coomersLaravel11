@@ -30,7 +30,8 @@
             </div>
             <!-- new-category -->
             <div class="wg-box">
-                <form class="form-new-product form-style-1" action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="form-new-product form-style-1" action="{{ route('admin.categories.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <fieldset class="name">
                         <div class="body-title">Category Name <span class="tf-color-1">*</span>
@@ -50,7 +51,7 @@
                     @error('slug')
                         <span class="text-red-500 text-sm block mt-1">{{ $message }}</span>
                     @enderror
-                      <fieldset>
+                    <fieldset>
                         <div class="body-title">Upload images <span class="tf-color-1">*</span>
                         </div>
                         <div class="upload-image flex-grow">
@@ -82,30 +83,30 @@
     </div>
 @endsection
 @push('scripts')
-<script>
-$(document).ready(function() {
-    // تحديث slug تلقائي
-    $("input[name='name']").on("input", function() {
-        const slug = $(this).val()
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w\-]+/g, "")
-            .replace(/\-\-+/g, "-");
-        $("input[name='slug']").val(slug);
-    });
+    <script>
+        $(document).ready(function() {
+            // تحديث slug تلقائي
+            $("input[name='name']").on("input", function() {
+                const slug = $(this).val()
+                    .toLowerCase()
+                    .trim()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w\-]+/g, "")
+                    .replace(/\-\-+/g, "-");
+                $("input[name='slug']").val(slug);
+            });
 
-    // معاينة الصورة (اختياري)
-    const photoInp = $("#myFile");
-    if(photoInp.length) {
-        photoInp.on("change", function() {
-            const [file] = this.files;
-            if(file) {
-                $("#imgpreview img").attr("src", URL.createObjectURL(file));
-                $("#imgpreview").show();
+            // معاينة الصورة (اختياري)
+            const photoInp = $("#myFile");
+            if (photoInp.length) {
+                photoInp.on("change", function() {
+                    const [file] = this.files;
+                    if (file) {
+                        $("#imgpreview img").attr("src", URL.createObjectURL(file));
+                        $("#imgpreview").show();
+                    }
+                });
             }
         });
-    }
-});
-</script>
+    </script>
 @endpush

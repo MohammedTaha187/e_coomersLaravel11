@@ -128,48 +128,56 @@
                         </div>
                     </fieldset>
                     <fieldset>
-                         <div class="wg-box mt-5">
-                <h3>Gallery Images</h3>
-                <form action="{{ route('admin.galleries.store', $product->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <fieldset>
-                        <div class="body-title mb-10">Upload Gallery Images</div>
-                        <div class="upload-image mb-16">
-                            <div id="galPreview" class="flex gap-2 flex-wrap"></div>
-                            <div id="galUpload" class="item up-load">
-                                <label class="uploadfile" for="galleryImages">
-                                    <span class="icon">
-                                        <i class="icon-upload-cloud"></i>
-                                    </span>
-                                    <span class="text-tiny">
-                                        Drop your images here or select
-                                        <span class="tf-color">click to browse</span>
-                                        <br> (Max 10 images)
-                                    </span>
-                                    <input type="file" id="galleryImages" name="gallery_images[]" accept="image/*" multiple>
-                                </label>
+                        <div class="wg-box mt-5">
+                            <h3>Gallery Images</h3>
+                            <form action="{{ route('admin.galleries.store', $product->id) }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <fieldset>
+                                    <div class="body-title mb-10">Upload Gallery Images</div>
+                                    <div class="upload-image mb-16">
+                                        <div id="galPreview" class="flex gap-2 flex-wrap"></div>
+                                        <div id="galUpload" class="item up-load">
+                                            <label class="uploadfile" for="galleryImages">
+                                                <span class="icon">
+                                                    <i class="icon-upload-cloud"></i>
+                                                </span>
+                                                <span class="text-tiny">
+                                                    Drop your images here or select
+                                                    <span class="tf-color">click to browse</span>
+                                                    <br> (Max 10 images)
+                                                </span>
+                                                <input type="file" id="galleryImages" name="gallery_images[]"
+                                                    accept="image/*" multiple>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <button type="submit" class="tf-button w-full">Upload Gallery</button>
+                            </form>
+
+                            <div class="flex items-center flex-wrap gap10 mt-4">
+                                @foreach ($product->galleries as $gallery)
+                                    <div class="item position-relative"
+                                        style="position: relative; width: 100px; height: 100px;">
+                                        <img src="{{ Storage::url($gallery->image) }}" alt="" class="effect8"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                        <form action="{{ route('admin.galleries.destroy', $gallery->id) }}"
+                                            method="POST" class="position-absolute top-0 end-0"
+                                            style="position: absolute; top: 0; right: 0;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="tf-button-sm"
+                                                style="background: red; color: white; border: none; padding: 2px 5px; cursor: pointer;"
+                                                onclick="return confirm('Are you sure?')">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </fieldset>
-                    <button type="submit" class="tf-button w-full">Upload Gallery</button>
-                </form>
-
-                <div class="flex items-center flex-wrap gap10 mt-4">
-                    @foreach ($product->galleries as $gallery)
-                        <div class="item position-relative" style="position: relative; width: 100px; height: 100px;">
-                            <img src="{{ Storage::url($gallery->image) }}" alt="" class="effect8" style="width: 100%; height: 100%; object-fit: cover;">
-                            <form action="{{ route('admin.galleries.destroy', $gallery->id) }}" method="POST" class="position-absolute top-0 end-0" style="position: absolute; top: 0; right: 0;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="tf-button-sm" style="background: red; color: white; border: none; padding: 2px 5px; cursor: pointer;" onclick="return confirm('Are you sure?')">
-                                    <i class="icon-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            </fieldset>
 
                     <div class="cols gap22">
                         <fieldset class="name">

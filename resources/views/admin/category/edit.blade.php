@@ -32,7 +32,7 @@
             <div class="wg-box">
                 <form class="form-new-product form-style-1" action="{{ route('admin.categories.update', $category->id) }}"
                     method="POST" enctype="multipart/form-data">
-                    
+
                     @csrf
                     @method('PUT')
 

@@ -7,15 +7,18 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
 Auth::routes();
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('user.home.index');
+
+Route::get('/shop', [ShopController::class, 'index'])->name('user.shop.index');
+Route::get('/shop/{product_slug}', [ShopController::class, 'productDetails'])->name('user.shop.product-details');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/account-dashboard', [UserController::class, 'index'])->name('user.index');
@@ -59,5 +62,4 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
     // order routes
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::get('/admin/orders/create', [OrderController::class, 'create'])->name('admin.orders.create');
-    
 });

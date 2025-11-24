@@ -34,12 +34,13 @@
                         <form class="form-search" action="{{ route('admin.categories.search') }}" method="GET">
                             <fieldset class="name">
                                 <input type="text" placeholder="Search here..." class="" name="search"
-                                    tabindex="2" value="{{ request()->query('search') }}" aria-required="true" required="">
+                                    tabindex="2" value="{{ request()->query('search') }}" aria-required="true"
+                                    required="">
                             </fieldset>
                             <div class="button-submit">
                                 <button class="" type="submit"><i class="icon-search"></i></button>
-                                </div>
-                        </form> 
+                            </div>
+                        </form>
                     </div>
                     <a class="tf-button style-1 w208" href="{{ route('admin.categories.create') }}"><i
                             class="icon-plus"></i>Add new</a>

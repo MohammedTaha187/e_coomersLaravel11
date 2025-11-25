@@ -357,9 +357,11 @@
 
                 <div class="d-flex justify-content-between mb-4 pb-md-2">
                     <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
-                        <a href="{{ route('user.home.index') }}" class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
+                        <a href="{{ route('user.home.index') }}"
+                            class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>
                         <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
-                        <a href="{{ route('user.shop.index') }}" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
+                        <a href="{{ route('user.shop.index') }}"
+                            class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>
                     </div>
 
                     <div
@@ -412,18 +414,46 @@
                                         data-settings='{"resizeObserver": true}'>
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
-                                                <a href="{{ route('user.shop.product-details', ['product_slug'=>$product->slug]) }}"><img loading="lazy"src="{{ $product->image ? Storage::url($product->image) : asset('images/placeholder.png') }}"width="330" height="400" alt="{{ $product->name }}"class="pc__img"></a>
+                                                <a
+                                                    href="{{ route('user.shop.product-details', ['product_slug' => $product->slug]) }}"><img
+                                                        loading="lazy"src="{{ $product->image ? Storage::url($product->image) : asset('images/placeholder.png') }}"
+                                                        width="330" height="400"
+                                                        alt="{{ $product->name }}"class="pc__img"></a>
                                             </div>
                                             @foreach ($product->galleries as $gallery)
                                                 <div class="swiper-slide">
-                                                    <a href="{{ route('user.shop.product-details', ['product_slug'=>$product->slug]) }}"><img loading="lazy" src="{{ Storage::url($gallery->image) }}" width="330"height="400" alt="{{ $product->name }}"class="pc__img"></a>
+                                                    <a
+                                                        href="{{ route('user.shop.product-details', ['product_slug' => $product->slug]) }}"><img
+                                                            loading="lazy" src="{{ Storage::url($gallery->image) }}"
+                                                            width="330"height="400"
+                                                            alt="{{ $product->name }}"class="pc__img"></a>
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <span class="pc__img-prev"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg></span>
-                                        <span class="pc__img-next"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></span>
+                                        <span class="pc__img-prev"><svg width="7" height="11" viewBox="0 0 7 11"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <use href="#icon_prev_sm" />
+                                            </svg></span>
+                                        <span class="pc__img-next"><svg width="7" height="11" viewBox="0 0 7 11"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <use href="#icon_next_sm" />
+                                            </svg></span>
                                     </div>
-                                    <button class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+                                    @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                                        <a href="{{ route('user.cart.index') }}"
+                                            class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn btn-primary btn-addtocart ">Go
+                                            to Cart</a>
+                                    @else
+                                        <form name="addtocart-form" method="post"
+                                            action="{{ route('user.cart.add') }}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <input type="hidden" name="name" value="{{ $product->name }}">
+                                            <input type="hidden" name="price"value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
+                                            <button type="submit"class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+                                        </form>
+                                    @endif
                                 </div>
 
                                 <div class="pc__info position-relative">
@@ -480,7 +510,7 @@
 
                 <div class="divider"></div>
                 <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-                {{ $products->links() }}
+                    {{ $products->links() }}
                 </div>
             </div>
         </section>

@@ -48,9 +48,9 @@
                         <div class="product-single__thumbnail">
                             <div class="swiper-container">
                                 <div class="swiper-wrapper">
-                                    <div class="swiper-slide product-single__image-item"><img loading="lazy"
-                                            class="h-auto" src="{{ Storage::url($product->image) }}" width="104"
-                                            height="104" alt="" /></div>
+                                    <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto"
+                                            src="{{ Storage::url($product->image) }}" width="104" height="104"
+                                            alt="" /></div>
                                     @foreach ($product->galleries as $gallery)
                                         <div class="swiper-slide product-single__image-item"><img loading="lazy"
                                                 class="h-auto" src="{{ Storage::url($gallery->image) }}" width="104"
@@ -108,9 +108,9 @@
                     <div class="product-single__price">
                         <span class="current-price">
                             @if ($product->sale_price)
-                                <s>{{ $product->regular_price }}</s> ${{ $product->sale_price }}
+                                <s>{{ $product->price }}</s> ${{ $product->sale_price }}
                             @else
-                                ${{ $product->regular_price }}
+                                ${{ $product->price }}
                             @endif
                         </span>
                     </div>
@@ -183,7 +183,7 @@
                             <label>Brand:</label>
                             <span>{{ $product->brand->name }}</span>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -194,11 +194,7 @@
                             href="#tab-description" role="tab" aria-controls="tab-description"
                             aria-selected="true">Description</a>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link nav-link_underscore" id="tab-additional-info-tab" data-bs-toggle="tab"
-                            href="#tab-additional-info" role="tab" aria-controls="tab-additional-info"
-                            aria-selected="false">Additional Information</a>
-                    </li>
+
                     <li class="nav-item" role="presentation">
                         <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab"
                             href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Reviews
@@ -211,53 +207,9 @@
                         <div class="product-single__description">
                             <h3 class="block-title mb-4">{{ $product->short_description }}</h3>
                             <p class="content">{{ $product->description }}</p>
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <h3 class="block-title">Why choose product?</h3>
-                                    <ul class="list text-list">
-                                        <li>Creat by cotton fibric with soft and smooth</li>
-                                        <li>Simple, Configurable (e.g. size, color, etc.), bundled</li>
-                                        <li>Downloadable/Digital Products, Virtual Products</li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-6">
-                                    <h3 class="block-title">Sample Number List</h3>
-                                    <ol class="list text-list">
-                                        <li>Create Store-specific attrittbutes on the fly</li>
-                                        <li>Simple, Configurable (e.g. size, color, etc.), bundled</li>
-                                        <li>Downloadable/Digital Products, Virtual Products</li>
-                                    </ol>
-                                </div>
-                            </div>
-                            <h3 class="block-title mb-0">Lining</h3>
-                            <p class="content">100% Polyester, Main: 100% Polyester.</p>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="tab-additional-info" role="tabpanel"
-                        aria-labelledby="tab-additional-info-tab">
-                        <div class="product-single__addtional-info">
-                            <div class="item">
-                                <label class="h6">Weight</label>
-                                <span>1.25 kg</span>
-                            </div>
-                            <div class="item">
-                                <label class="h6">Dimensions</label>
-                                <span>90 x 60 x 90 cm</span>
-                            </div>
-                            <div class="item">
-                                <label class="h6">Size</label>
-                                <span>XS, S, M, L, XL</span>
-                            </div>
-                            <div class="item">
-                                <label class="h6">Color</label>
-                                <span>Black, Orange, White</span>
-                            </div>
-                            <div class="item">
-                                <label class="h6">Storage</label>
-                                <span>Relaxed fit shirt-style dress with a rugged</span>
-                            </div>
-                        </div>
-                    </div>
+                     
                     <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
                         <h2 class="product-single__reviews-title">Reviews</h2>
                         <div class="product-single__reviews-list">
@@ -440,277 +392,73 @@
             }
           }'>
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_3.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_3-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
+                        @foreach ($rproducts as $rproduct)
+                            <div class="swiper-slide product-card">
+                                <div class="pc__img-wrapper">
+                                    <a
+                                        href="{{ route('user.shop.product-details', ['product_slug' => $rproduct->slug]) }}">
+                                        <img loading="lazy" src="{{ asset('storage/' . $rproduct->image) }}"
+                                            width="330" height="400" alt="{{ $rproduct->name }}" class="pc__img">
+                                        <img loading="lazy" src="{{ asset('storage/' . $rproduct->image) }}"
+                                            width="330" height="400" alt="{{ $rproduct->name }}"
+                                            class="pc__img pc__img-second">
+                                    </a>
 
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Kirby T-Shirt</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$17</span>
+                                    <button
+                                        class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
+                                        data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
                                 </div>
 
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                                <div class="pc__info position-relative">
+                                    <p class="pc__category">{{ optional($rproduct->category)->name }}</p>
 
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_1-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
+                                    <h6 class="pc__title">
+                                        <a
+                                            href="{{ route('user.shop.product-details', ['product_slug' => $rproduct->slug]) }}">
+                                            {{ $rproduct->name }}
+                                        </a>
+                                    </h6>
 
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Cropped Faux Leather Jacket</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$29</span>
-                                </div>
-                                <div class="product-card__review d-flex align-items-center">
-                                    <div class="reviews-group d-flex">
-                                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_star" />
-                                        </svg>
-                                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_star" />
-                                        </svg>
-                                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_star" />
-                                        </svg>
-                                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_star" />
-                                        </svg>
-                                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_star" />
-                                        </svg>
+                                    <div class="product-card__price d-flex">
+                                        <span class="money price">
+                                            @if ($rproduct->sale_price)
+                                                <s>${{ $rproduct->price }}</s> ${{ $rproduct->sale_price }}
+                                            @else
+                                                ${{ $rproduct->price }}
+                                            @endif
+                                        </span>
                                     </div>
-                                    <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
+
+                                    <div class="product-card__review d-flex align-items-center">
+                                        <div class="reviews-group d-flex">
+                                            @for ($i = 0; $i < 5; $i++)
+                                                <svg class="review-star" viewBox="0 0 9 9"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_star" />
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                        <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
+                                    </div>
+
+                                    <button
+                                        class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
+                                        title="Add To Wishlist">
+                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <use href="#icon_heart" />
+                                        </svg>
+                                    </button>
                                 </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
                             </div>
-                        </div>
+                        @endforeach
 
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_2.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_2-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
+                    </div>
 
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Calvin Shorts</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$62</span>
-                                </div>
 
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+                </div>
 
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_6.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_6-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
 
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Shirt In Botanical Cheetah Print</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$62</span>
-                                </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_7.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_7-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
-
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Cotton Jersey T-Shirt</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$17</span>
-                                </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_4.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_4-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
-
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Cableknit Shawl</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price price-old">$129</span>
-                                    <span class="money price price-sale">$99</span>
-                                </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_5.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_5-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
-
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Colorful Jacket</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price">$29</span>
-                                </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="swiper-slide product-card">
-                            <div class="pc__img-wrapper">
-                                <a href="details.html">
-                                    <img loading="lazy" src="assets/images/products/product_8.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img">
-                                    <img loading="lazy" src="assets/images/products/product_8-1.jpg" width="330"
-                                        height="400" alt="Cropped Faux leather Jacket" class="pc__img pc__img-second">
-                                </a>
-                                <button
-                                    class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium js-add-cart js-open-aside"
-                                    data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
-                            </div>
-
-                            <div class="pc__info position-relative">
-                                <p class="pc__category">Dresses</p>
-                                <h6 class="pc__title"><a href="details.html">Zessi Dresses</a></h6>
-                                <div class="product-card__price d-flex">
-                                    <span class="money price price-old">$129</span>
-                                    <span class="money price price-sale">$99</span>
-                                </div>
-
-                                <button
-                                    class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                    title="Add To Wishlist">
-                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <use href="#icon_heart" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div><!-- /.swiper-wrapper -->
-                </div><!-- /.swiper-container js-swiper-slider -->
 
                 <div
                     class="products-carousel__prev position-absolute top-50 d-flex align-items-center justify-content-center">
@@ -729,6 +477,6 @@
                 <!-- /.products-pagination -->
             </div><!-- /.position-relative -->
 
-        </section><!-- /.products-carousel container -->
+        </section>
     </main>
 @endsection

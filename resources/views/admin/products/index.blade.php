@@ -108,13 +108,13 @@
                                                 <i class="icon-trash-2"></i>
                                             </a>
                                             <form id="delete-product-{{ $product->id }}"
-                                                action="{{ route('admin.categories.destroy', $product->id) }}"
+                                                action="{{ route('admin.products.destroy', $product->id) }}"
                                                 method="POST" style="display: none;">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
                                         </div>
-                                    </td>
+                                    </td>`
                                 </tr>
                             @endforeach
                         </tbody>

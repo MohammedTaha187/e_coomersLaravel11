@@ -519,6 +519,7 @@ function pureFadeOut(e) {
 
         this.$stickies.forEach(function($sticky) {
           const $grid = $sticky.previousElementSibling || $sticky.nextElementSibling;
+          if (!$grid) return;
           const $target = $grid.offsetHeight > $sticky.offsetHeight ? $sticky : $grid;
 
           $target.lastKnownY = window.scrollY;
@@ -540,6 +541,7 @@ function pureFadeOut(e) {
 
         _this.$stickies.forEach(function($sticky) {
           const $grid = $sticky.previousElementSibling || $sticky.nextElementSibling;
+          if (!$grid) return;
           const $target = $grid.offsetHeight > $sticky.offsetHeight ? $sticky : $grid;
 
           var bounds = $target.getBoundingClientRect(),
@@ -1339,9 +1341,12 @@ function pureFadeOut(e) {
     window.location.href='./shop_order_complete.html';
   });
 
-  document.querySelector('.js-show-register').addEventListener('click', function(e) {
-    document.querySelector(this.getAttribute("href")).click();
-  });
+  const registerBtn = document.querySelector('.js-show-register');
+  if (registerBtn) {
+    registerBtn.addEventListener('click', function(e) {
+      document.querySelector(this.getAttribute("href")).click();
+    });
+  }
 
   $('button.js-add-wishlist, a.add-to-wishlist').off('click').on('click', function() {
     if($(this).hasClass("active"))

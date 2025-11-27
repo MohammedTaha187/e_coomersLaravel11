@@ -411,7 +411,7 @@
                                             width="330" height="400" alt="{{ $rproduct->name }}"
                                             class="pc__img pc__img-second">
                                     </a>
-                                        @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                                        @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $rproduct->id)->count() > 0)
                                         <a href="{{ route('user.cart.index') }}"
                                             class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn btn-primary btn-addtocart ">Go
                                             to Cart</a>

@@ -10,17 +10,26 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
-    protected $guarded = ['id' , 'created_at', 'updated_at' ];
-
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function colors()
+    {
+        return $this->hasMany(Color::class);
+    }
+
+    public function sizes()
+    {
+        return $this->hasMany(Size::class);
     }
     public function galleries()
     {
@@ -41,6 +50,4 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-        
 }
-

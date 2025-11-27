@@ -20,17 +20,31 @@ class CartController extends Controller
         return redirect()->back();
     }
 
-    public function edit_to_cart(Request $request)
+    public function increase_cart_quantity($rowId)
     {
-        foreach ($request->quantity as $rowId => $qty) {
-            Cart::instance('cart')->update($rowId, $qty);
-        }
+        $prduct = Cart::instance('cart')->get($rowId);
+        $qty = $prduct->qty + 1;
+        Cart::instance('cart')->update($rowId, $qty);
+        return redirect()->back();
+    }
+
+    public function decrease_cart_quantity($rowId)
+    {
+        $prduct = Cart::instance('cart')->get($rowId);
+        $qty = $prduct->qty - 1;
+        Cart::instance('cart')->update($rowId, $qty);
         return redirect()->back();
     }
 
     public function remove_to_cart(Request $request)
     {
         Cart::instance('cart')->remove($request->id);
+        return redirect()->back();
+    }
+
+    public function empty_cart()
+    {
+        Cart::instance('cart')->destroy();
         return redirect()->back();
     }
 }

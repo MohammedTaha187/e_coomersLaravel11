@@ -47,9 +47,8 @@
                                     <tr>
                                         <td>
                                             <div class="shopping-cart__product-item">
-                                                <img loading="lazy"
-                                                    src="{{ Storage::url($item->model->image) }}" width="120"
-                                                    height="120" alt="{{ $item->name }}" />
+                                                <img loading="lazy" src="{{ Storage::url($item->model->image) }}"
+                                                    width="120" height="120" alt="{{ $item->name }}" />
                                             </div>
                                         </td>
                                         <td>
@@ -66,9 +65,23 @@
                                         </td>
                                         <td>
                                             <div class="qty-control position-relative">
-                                                <input type="number" name="quantity[{{ $item->rowId }}]" value="{{ $item->qty }}" min="1" class="qty-control__number text-center" form="update-cart-form">
-                                                <div class="qty-control__reduce">-</div>
-                                                <div class="qty-control__increase">+</div>
+                                                <input type="number" name="quantity[{{ $item->rowId }}]"
+                                                    value="{{ $item->qty }}" min="1"
+                                                    class="qty-control__number text-center" form="update-cart-form">
+                                                <form
+                                                    action="{{ route('user.cart.qty.decrease', ['rowId' => $item->rowId]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="qty-control__reduce">-</div>
+                                                </form>
+                                                <form
+                                                    action="{{ route('user.cart.qty.increase', ['rowId' => $item->rowId]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="qty-control__increase">+</div>
+                                                </form>
                                             </div>
                                         </td>
                                         <td>
@@ -95,10 +108,10 @@
                             </tbody>
                         </table>
                         <div class="cart-table-footer">
-                            <form action="{{ route('user.cart.update') }}" method="POST" id="update-cart-form">
+                            <form action="{{ route('user.cart.empty') }}" method="POST" id="empty-cart-form">
                                 @csrf
-                                @method('PUT')
-                                <button class="btn btn-light" type="submit">UPDATE CART</button>
+                                @method('DELETE')
+                                <button class="btn btn-light" type="submit">Clear CART</button>
                             </form>
                         </div>
                         <div class="position-relative bg-body">
@@ -157,3 +170,23 @@
         </section>
     </main>
 @endsection
+@push('scripts')
+    <script>
+        $(function() {
+            $('.qty-control__reduce').click(function() {
+                $(this).closest('form').submit();
+            });
+            $('.qty-control__increase').click(function() {
+                $(this).closest('form').submit();
+            });
+
+            $('.remove-cart').click(function() {
+                $(this).closest('form').submit();
+            });
+
+            $('.empty-cart').click(function() {
+                $(this).closest('form').submit();
+            });
+        })
+    </script>
+@endpush

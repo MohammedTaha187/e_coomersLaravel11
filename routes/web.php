@@ -14,7 +14,6 @@ use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
 Auth::routes();
 
 Route::get('/', [HomeController::class, 'index'])->name('user.home.index');
@@ -26,8 +25,10 @@ Route::get('/shop/{product_slug}', [ShopController::class, 'productDetails'])->n
 //cart routes
 Route::get('/cart', [CartController::class, 'index'])->name('user.cart.index');
 Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('user.cart.add');
-Route::put('/cart/update', [CartController::class, 'edit_to_cart'])->name('user.cart.update');
+Route::put('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('user.cart.qty.increase');
+Route::put('/cart/decrease-quantity/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('user.cart.qty.decrease');
 Route::delete('/cart/remove', [CartController::class, 'remove_to_cart'])->name('user.cart.remove');
+Route::delete('/cart/empty', [CartController::class, 'empty_cart'])->name('user.cart.empty');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/account-dashboard', [UserController::class, 'index'])->name('user.index');

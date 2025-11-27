@@ -80,6 +80,23 @@
                         </fieldset>
                     </div>
 
+                    <div class="gap22 cols">
+                        <fieldset class="name">
+                            <div class="body-title mb-10">Colors</div>
+                            <div id="colors-container">
+                                <!-- Dynamic Color Inputs will be appended here -->
+                            </div>
+                            <button type="button" class="tf-button btn-sm" id="add-color">Add Color</button>
+                        </fieldset>
+                        <fieldset class="name">
+                            <div class="body-title mb-10">Sizes</div>
+                            <div id="sizes-container">
+                                <!-- Dynamic Size Inputs will be appended here -->
+                            </div>
+                            <button type="button" class="tf-button btn-sm" id="add-size">Add Size</button>
+                        </fieldset>
+                    </div>
+
                     <fieldset class="shortdescription">
                         <div class="body-title mb-10">Short Description <span class="tf-color-1">*</span></div>
                         <textarea class="mb-10 ht-150" name="short_description" placeholder="Short Description" tabindex="0"
@@ -200,7 +217,6 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // تحديث slug تلقائي
             $("input[name='name']").on("input", function() {
                 const slug = $(this).val()
                     .toLowerCase()
@@ -211,7 +227,6 @@
                 $("input[name='slug']").val(slug);
             });
 
-            // معاينة الصورة (اختياري)
             const photoInp = $("#productImage");
             if (photoInp.length) {
                 photoInp.on("change", function() {
@@ -227,7 +242,7 @@
         const galPreview = document.getElementById('galPreview');
 
         galleryInput.addEventListener('change', function() {
-            galPreview.innerHTML = ''; // تفريغ الـ Preview القديم
+            galPreview.innerHTML = ''; 
             const files = this.files;
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
@@ -245,6 +260,52 @@
                 };
                 reader.readAsDataURL(file);
             });
+        });
+
+
+    
+        let colorIndex = 0;
+        $('#add-color').on('click', function() {
+            const html = `
+            <div class="flex gap-2 mb-2 items-center color-row">
+                <input type="text" name="colors[${colorIndex}][name]" placeholder="Color Name" class="form-control" required>
+                <div class="flex items-center gap-2">
+                    <input type="color" name="colors[${colorIndex}][code]" class="form-control form-control-color" value="#000000" title="Choose your color" style="width: 50px; padding: 0; border: none; cursor: pointer;">
+                    <input type="text" class="form-control color-hex-input" placeholder="#000000" value="#000000" style="width: 100px;">
+                </div>
+                <button type="button" class="tf-button-sm remove-color" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+            </div>
+        `;
+            $('#colors-container').append(html);
+            colorIndex++;
+        });
+
+        $(document).on('click', '.remove-color', function() {
+            $(this).closest('.color-row').remove();
+        });
+
+        $(document).on('input', '.form-control-color', function() {
+            $(this).closest('.color-row').find('.color-hex-input').val($(this).val());
+        });
+
+        $(document).on('input', '.color-hex-input', function() {
+            $(this).closest('.color-row').find('.form-control-color').val($(this).val());
+        });
+
+        let sizeIndex = 0;
+        $('#add-size').on('click', function() {
+            const html = `
+            <div class="flex gap-2 mb-2 items-center size-row">
+                <input type="text" name="sizes[${sizeIndex}][name]" placeholder="Size Name" class="form-control" required>
+                <button type="button" class="tf-button-sm remove-size" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+            </div>
+        `;
+            $('#sizes-container').append(html);
+            sizeIndex++;
+        });
+
+        $(document).on('click', '.remove-size', function() {
+            $(this).closest('.size-row').remove();
         });
     </script>
 @endpush

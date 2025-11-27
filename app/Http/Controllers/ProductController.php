@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateproductRequest;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,8 +33,10 @@ class ProductController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('name')->get();
+        $colors = Color::orderBy('name')->get();
+        $sizes = Size::orderBy('name')->get();
 
-        return view('admin.products.create', compact('categories', 'brands'));
+        return view('admin.products.create', compact('categories', 'brands', 'colors', 'sizes'));
     }
 
     /**
@@ -63,6 +67,27 @@ class ProductController extends Controller
 
         $product->save();
 
+        if ($request->has('colors') && is_array($request->colors)) {
+            foreach ($request->colors as $colorData) {
+                if (isset($colorData['name']) && isset($colorData['code'])) {
+                    $product->colors()->create([
+                        'name' => $colorData['name'],
+                        'code' => $colorData['code']
+                    ]);
+                }
+            }
+        }
+
+        if ($request->has('sizes') && is_array($request->sizes)) {
+            foreach ($request->sizes as $sizeData) {
+                if (isset($sizeData['name'])) {
+                    $product->sizes()->create([
+                        'name' => $sizeData['name']
+                    ]);
+                }
+            }
+        }
+
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
                 $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
@@ -92,8 +117,10 @@ class ProductController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('name')->get();
+        $colors = Color::orderBy('name')->get();
+        $sizes = Size::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'brands'));
+        return view('admin.products.edit', compact('product', 'categories', 'brands', 'colors', 'sizes'));
     }
 
     /**
@@ -121,6 +148,31 @@ class ProductController extends Controller
         }
 
         $product->save();
+
+        // Update Colors
+        $product->colors()->delete(); 
+        if ($request->has('colors') && is_array($request->colors)) {
+            foreach ($request->colors as $colorData) {
+                if (isset($colorData['name']) && isset($colorData['code'])) {
+                    $product->colors()->create([
+                        'name' => $colorData['name'],
+                        'code' => $colorData['code']
+                    ]);
+                }
+            }
+        }
+
+        // Update Sizes
+        $product->sizes()->delete(); 
+        if ($request->has('sizes') && is_array($request->sizes)) {
+            foreach ($request->sizes as $sizeData) {
+                if (isset($sizeData['name'])) {
+                    $product->sizes()->create([
+                        'name' => $sizeData['name']
+                    ]);
+                }
+            }
+        }
 
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {

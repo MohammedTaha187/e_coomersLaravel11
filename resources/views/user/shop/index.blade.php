@@ -1,5 +1,25 @@
 @extends('layouts.app')
 @section('content')
+    <style>
+        .brand-list li,
+        .category-list li {
+            line-height: 40px;
+        }
+
+        .brand-list li .chk-brand,
+        .category-list li .chk-category {
+            width: 1rem;
+            height: 1rem;
+            color: #e4e4e4;
+            border: 0.125rem solid #e4e4e4;
+            border-radius: 0.25rem;
+            margin-right: 0.75rem;
+        }
+
+        .filled-heart {
+            color: orange;
+        }
+    </style>
     <main class="pt-90">
         <section class="shop-main container d-flex pt-4 pt-xl-5">
             <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
@@ -29,37 +49,17 @@
                         <div id="accordion-filter-1" class="accordion-collapse collapse show border-0"
                             aria-labelledby="accordion-heading-1" data-bs-parent="#categories-list">
                             <div class="accordion-body px-0 pb-0 pt-3">
-                                <ul class="list list-inline mb-0">
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Dresses</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Shorts</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Sweatshirts</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Swimwear</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Jackets</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">T-Shirts & Tops</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Jeans</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Trousers</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Men</a>
-                                    </li>
-                                    <li class="list-item">
-                                        <a href="#" class="menu-link py-1">Jumpers & Cardigans</a>
-                                    </li>
+                                <ul class="list list-inline mb-0 category-list">
+                                    @foreach ($categories as $category)
+                                        <li class="list-item">
+                                            <span class="menu-link py-1">
+                                                <input type="checkbox" name="categories" value="{{ $category->id }}"
+                                                    class="chk-category" @if (in_array($category->id, explode(',', $f_categories))) checked @endif>
+                                                {{ $category->name }}
+                                            </span>
+                                            <span class="badge bg-light text-dark">{{ $category->products->count() }}</span>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -87,17 +87,14 @@
                             aria-labelledby="accordion-heading-1" data-bs-parent="#color-filters">
                             <div class="accordion-body px-0 pb-0">
                                 <div class="d-flex flex-wrap">
-                                    <a href="#" class="swatch-color js-filter" style="color: #0a2472"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d7bb4f"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #282828"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #b1d6e8"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #9c7539"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d29b48"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #e6ae95"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #d76b67"></a>
-                                    <a href="#" class="swatch-color swatch_active js-filter"
-                                        style="color: #bababa"></a>
-                                    <a href="#" class="swatch-color js-filter" style="color: #bfdcc4"></a>
+                                    @foreach ($colors as $color)
+                                        @php
+                                            $colorStyle = 'color:' . $color->code;
+                                        @endphp
+                                        <a href="javascript:void(0)"
+                                            class="swatch-color js-color-filter @if (in_array($color->name, explode(',', $f_colors))) swatch_active @endif"
+                                            style="{{ $colorStyle }}" data-id="{{ $color->name }}"></a>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -125,18 +122,11 @@
                             aria-labelledby="accordion-heading-size" data-bs-parent="#size-filters">
                             <div class="accordion-body px-0 pb-0">
                                 <div class="d-flex flex-wrap">
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XS</a>
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">S</a>
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">M</a>
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">L</a>
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XL</a>
-                                    <a href="#"
-                                        class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-filter">XXL</a>
+                                    @foreach ($sizes as $shop_size)
+                                        <a href="javascript:void(0)"
+                                            class="swatch-size btn btn-sm btn-outline-light mb-3 me-3 js-size-filter @if (in_array($shop_size->name, explode(',', $f_sizes))) swatch_active @endif"
+                                            data-id="{{ $shop_size->name }}">{{ $shop_size->name }}</a>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -163,56 +153,17 @@
                         <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0"
                             aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
                             <div class="search-field multi-select accordion-body px-0 pb-0">
-                                <select class="d-none" multiple name="total-numbers-list">
-                                    <option value="1">Adidas</option>
-                                    <option value="2">Balmain</option>
-                                    <option value="3">Balenciaga</option>
-                                    <option value="4">Burberry</option>
-                                    <option value="5">Kenzo</option>
-                                    <option value="5">Givenchy</option>
-                                    <option value="5">Zara</option>
-                                </select>
-                                <div class="search-field__input-wrapper mb-3">
-                                    <input type="text" name="search_text"
-                                        class="search-field__input form-control form-control-sm border-light border-2"
-                                        placeholder="Search" />
-                                </div>
-                                <ul class="multi-select__list list-unstyled">
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Adidas</span>
-                                        <span class="text-secondary">2</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Balmain</span>
-                                        <span class="text-secondary">7</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Balenciaga</span>
-                                        <span class="text-secondary">10</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Burberry</span>
-                                        <span class="text-secondary">39</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Kenzo</span>
-                                        <span class="text-secondary">95</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Givenchy</span>
-                                        <span class="text-secondary">1092</span>
-                                    </li>
-                                    <li
-                                        class="search-suggestion__item multi-select__item text-primary js-search-select js-multi-select">
-                                        <span class="me-auto">Zara</span>
-                                        <span class="text-secondary">48</span>
-                                    </li>
+                                <ul class="list list-inline mb-0 brand-list">
+                                    @foreach ($brands as $brand)
+                                        <li class="list-item">
+                                            <span class="menu-link py-1">
+                                                <input type="checkbox" name="brands" value="{{ $brand->id }}"
+                                                    class="chk-brand" @if (in_array($brand->id, explode(',', $f_brands))) checked @endif>
+                                                {{ $brand->name }}
+                                            </span>
+                                            <span class="badge bg-light text-dark">{{ $brand->products->count() }}</span>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -240,15 +191,15 @@
                             aria-labelledby="accordion-heading-price" data-bs-parent="#price-filters">
                             <input class="price-range-slider" type="text" name="price_range" value=""
                                 data-slider-min="10" data-slider-max="1000" data-slider-step="5"
-                                data-slider-value="[250,450]" data-currency="$" />
+                                data-slider-value="[{{ $min_price }},{{ $max_price }}]" data-currency="$" />
                             <div class="price-range__info d-flex align-items-center mt-2">
                                 <div class="me-auto">
                                     <span class="text-secondary">Min Price: </span>
-                                    <span class="price-range__min">$250</span>
+                                    <span class="price-range__min">${{ $min_price }}</span>
                                 </div>
                                 <div>
                                     <span class="text-secondary">Max Price: </span>
-                                    <span class="price-range__max">$450</span>
+                                    <span class="price-range__max">${{ $max_price }}</span>
                                 </div>
                             </div>
                         </div>
@@ -367,16 +318,12 @@
                     <div
                         class="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
                         <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0"
-                            aria-label="Sort Items" name="total-number">
-                            <option selected>Default Sorting</option>
-                            <option value="1">Featured</option>
-                            <option value="2">Best selling</option>
-                            <option value="3">Alphabetically, A-Z</option>
-                            <option value="3">Alphabetically, Z-A</option>
-                            <option value="3">Price, low to high</option>
-                            <option value="3">Price, high to low</option>
-                            <option value="3">Date, old to new</option>
-                            <option value="3">Date, new to old</option>
+                            aria-label="Sort Items" id="orderby" name="orderby">
+                            <option value="-1" {{ $order == -1 ? 'selected' : '' }}>Default</option>
+                            <option value="1" {{ $order == 1 ? 'selected' : '' }}>Date old to new</option>
+                            <option value="2" {{ $order == 2 ? 'selected' : '' }}>Date new to old</option>
+                            <option value="3" {{ $order == 3 ? 'selected' : '' }}>Price low to high</option>
+                            <option value="4" {{ $order == 4 ? 'selected' : '' }}>Price high to low</option>
                         </select>
 
                         <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
@@ -405,7 +352,6 @@
                 </div>
 
                 <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid">
-
                     @foreach ($products as $product)
                         <div class="product-card-wrapper">
                             <div class="product-card mb-3 mb-md-4 mb-xxl-5">
@@ -416,17 +362,18 @@
                                             <div class="swiper-slide">
                                                 <a
                                                     href="{{ route('user.shop.product-details', ['product_slug' => $product->slug]) }}"><img
-                                                        loading="lazy"src="{{ $product->image ? Storage::url($product->image) : asset('images/placeholder.png') }}"
-                                                        width="330" height="400"
-                                                        alt="{{ $product->name }}"class="pc__img"></a>
+                                                        loading="lazy"
+                                                        src="{{ $product->image ? Storage::url($product->image) : asset('images/placeholder.png') }}"
+                                                        width="330" height="400" alt="{{ $product->name }}"
+                                                        class="pc__img"></a>
                                             </div>
                                             @foreach ($product->galleries as $gallery)
                                                 <div class="swiper-slide">
                                                     <a
                                                         href="{{ route('user.shop.product-details', ['product_slug' => $product->slug]) }}"><img
                                                             loading="lazy" src="{{ Storage::url($gallery->image) }}"
-                                                            width="330"height="400"
-                                                            alt="{{ $product->name }}"class="pc__img"></a>
+                                                            width="330" height="400" alt="{{ $product->name }}"
+                                                            class="pc__img"></a>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -450,15 +397,20 @@
                                             <input type="hidden" name="id" value="{{ $product->id }}">
                                             <input type="hidden" name="quantity" value="1">
                                             <input type="hidden" name="name" value="{{ $product->name }}">
-                                            <input type="hidden" name="price"value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
-                                            <button type="submit"class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+                                            <input type="hidden" name="price"
+                                                value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
+                                            <button type="submit"
+                                                class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"
+                                                data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
                                         </form>
                                     @endif
                                 </div>
 
                                 <div class="pc__info position-relative">
                                     <p class="pc__category">{{ $product->category->name }}</p>
-                                    <h6 class="pc__title"><a href="details.html">{{ $product->name }}</a></h6>
+                                    <h6 class="pc__title"><a
+                                            href="{{ route('user.shop.product-details', ['product_slug' => $product->slug]) }}">{{ $product->name }}</a>
+                                    </h6>
                                     <div class="product-card__price d-flex">
                                         <span class="money price">
                                             @if ($product->sale_price)
@@ -494,14 +446,38 @@
                                         <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
                                     </div>
 
-                                    <button
-                                        class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                        title="Add To Wishlist">
-                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_heart" />
-                                        </svg>
-                                    </button>
+                                    @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('wishlist')->content()->where('id', $product->id)->count() > 0)
+                                        <form method="POST"
+                                            action="{{ route('user.wishlist.remove', ['rowId' => \Surfsidemedia\Shoppingcart\Facades\Cart::instance('wishlist')->content()->where('id', $product->id)->first()->rowId]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist filled-heart"
+                                                title="Remove from Wishlist">
+                                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_heart" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="#">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $product->id }}">
+                                            <input type="hidden" name="name" value="{{ $product->name }}">
+                                            <input type="hidden" name="price"
+                                                value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit"
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
+                                                title="Add To Wishlist">
+                                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_heart" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -510,9 +486,91 @@
 
                 <div class="divider"></div>
                 <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-                    {{ $products->links() }}
+                    {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </section>
     </main>
+    <form id="filterForm" method="GET" action="{{ route('user.shop.index') }}">
+        <input type="hidden" name="page" value="{{ $products->currentPage() }}">
+        <input type="hidden" name="size" value="{{ $size }}">
+        <input type="hidden" name="order" value="{{ $order }}">
+        <input type="hidden" name="brands" id="hiddenBrands" value="{{ $f_brands ?? '' }}">
+        <input type="hidden" name="categories" id="hiddenCategories" value="{{ $f_categories ?? '' }}">
+        <input type="hidden" name="min_price" id="hiddenMinPrice" value="{{ $min_price }}">
+        <input type="hidden" name="max_price" id="hiddenMaxPrice" value="{{ $max_price }}">
+        <input type="hidden" name="colors" id="hiddenColors" value="{{ $f_colors ?? '' }}">
+        <input type="hidden" name="sizes" id="hiddenSizes" value="{{ $f_sizes ?? '' }}">
+    </form>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $("#pagesize").on("change", function() {
+                $("input[name='size']").val($("#pagesize option:selected").val());
+                $("#filterForm").submit();
+            });
+            $("#orderby").on("change", function() {
+                $("input[name='order']").val($("#orderby option:selected").val());
+                $("#filterForm").submit();
+            });
+            $("input[name='brands']").on("change", function() {
+                var brands = "";
+                $("input[name='brands']:checked").each(function() {
+                    if (brands == "") {
+                        brands += $(this).val();
+                    } else {
+                        brands += "," + $(this).val();
+                    }
+                });
+                $("#hiddenBrands").val(brands);
+                $("#filterForm").submit();
+            });
+            $("input[name='categories']").on("change", function() {
+                var categories = "";
+                $("input[name='categories']:checked").each(function() {
+                    if (categories == "") {
+                        categories += $(this).val();
+                    } else {
+                        categories += "," + $(this).val();
+                    }
+                });
+                $("#hiddenCategories").val(categories);
+                $("#filterForm").submit();
+            });
+
+            // Price range slider handler
+            $('.price-range-slider').on('slideStop', function(slideEvt) {
+                var values = slideEvt.value;
+                $('#hiddenMinPrice').val(values[0]);
+                $('#hiddenMaxPrice').val(values[1]);
+                $('#filterForm').submit();
+            });
+
+            // Color filter handler
+            $(".js-color-filter").on("click", function() {
+                $(this).toggleClass("swatch_active");
+                var colors = "";
+                $(".js-color-filter.swatch_active").each(function() {
+                    if (colors == "") colors += $(this).data("id");
+                    else colors += "," + $(this).data("id");
+                });
+                $("#hiddenColors").val(colors);
+                $("#filterForm").submit();
+            });
+
+            // Size filter handler
+            $(".js-size-filter").on("click", function() {
+                $(this).toggleClass("swatch_active");
+                var sizes = "";
+                $(".js-size-filter.swatch_active").each(function() {
+                    if (sizes == "") sizes += $(this).data("id");
+                    else sizes += "," + $(this).data("id");
+                });
+                $("#hiddenSizes").val(sizes);
+                $("#filterForm").submit();
+            });
+        })
+    </script>
+@endpush

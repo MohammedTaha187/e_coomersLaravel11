@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="main-content-inner">
-        <!-- main-content-wrap -->
         <div class="main-content-wrap">
             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                 <h3>Edit Product</h3>
@@ -64,7 +63,8 @@
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             {{ $product->category_id == $category->id ? 'selected' : '' }}>
-                                            {{ $category->name }}</option>
+                                            {{ $category->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -82,6 +82,52 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="gap22 cols">
+                        <fieldset class="name">
+                            <div class="body-title mb-10">Colors</div>
+                            <div id="colors-container">
+                                @foreach ($product->colors as $index => $color)
+                                    <div class="flex gap-2 mb-2 items-center color-row">
+                                        <input type="text" name="colors[{{ $index }}][name]"
+                                            placeholder="Color Name" class="form-control" value="{{ $color->name }}"
+                                            required>
+                                        <div class="flex items-center gap-2">
+                                            <input type="color" name="colors[{{ $index }}][code]"
+                                                class="form-control form-control-color" value="{{ $color->code }}"
+                                                title="Choose your color"
+                                                style="width: 50px; padding: 0; border: none; cursor: pointer;">
+                                            <input type="text" class="form-control color-hex-input" placeholder="#000000"
+                                                value="{{ $color->code }}" style="width: 100px;">
+                                        </div>
+                                        <button type="button" class="tf-button-sm remove-color"
+                                            style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" class="tf-button btn-sm" id="add-color">Add Color</button>
+                        </fieldset>
+                        <fieldset class="name">
+                            <div class="body-title mb-10">Sizes</div>
+                            <div id="sizes-container">
+                                @foreach ($product->sizes as $index => $size)
+                                    <div class="flex gap-2 mb-2 items-center size-row">
+                                        <select name="sizes[{{ $index }}][name]" class="form-control" required>
+                                            <option value="S" {{ $size->name == 'S' ? 'selected' : '' }}>S</option>
+                                            <option value="M" {{ $size->name == 'M' ? 'selected' : '' }}>M</option>
+                                            <option value="L" {{ $size->name == 'L' ? 'selected' : '' }}>L</option>
+                                            <option value="XL" {{ $size->name == 'XL' ? 'selected' : '' }}>XL</option>
+                                            <option value="XXL" {{ $size->name == 'XXL' ? 'selected' : '' }}>XXL
+                                            </option>
+                                        </select>
+                                        <button type="button" class="tf-button-sm remove-size"
+                                            style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" class="tf-button btn-sm" id="add-size">Add Size</button>
                         </fieldset>
                     </div>
 
@@ -159,12 +205,12 @@
                             <div class="flex items-center flex-wrap gap10 mt-4">
                                 @foreach ($product->galleries as $gallery)
                                     <div class="item position-relative"
-                                        style="position: relative; width: 100px; height: 100px;">
+                                        style="position: relative; inline-size: 100px; block-size: 100px;">
                                         <img src="{{ Storage::url($gallery->image) }}" alt="" class="effect8"
-                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                            style="inline-size: 100%; block-size: 100%; object-fit: cover;">
                                         <form action="{{ route('admin.galleries.destroy', $gallery->id) }}"
                                             method="POST" class="position-absolute top-0 end-0"
-                                            style="position: absolute; top: 0; right: 0;">
+                                            style="position: absolute; inset-block-start: 0; inset-inline-end: 0;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="tf-button-sm"
@@ -241,16 +287,13 @@
                     </div>
                 </div>
             </form>
-            <!-- /form-edit-product -->
         </div>
-        <!-- /main-content-wrap -->
     </div>
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // تحديث slug تلقائي
             $("input[name='name']").on("input", function() {
                 const slug = $(this).val()
                     .toLowerCase()
@@ -261,7 +304,6 @@
                 $("input[name='slug']").val(slug);
             });
 
-            // معاينة الصورة (اختياري)
             const photoInp = $("#productImage");
             if (photoInp.length) {
                 photoInp.on("change", function() {
@@ -277,7 +319,7 @@
         const galPreview = document.getElementById('galPreview');
 
         galleryInput.addEventListener('change', function() {
-            galPreview.innerHTML = ''; // تفريغ الـ Preview القديم
+            galPreview.innerHTML = '';
             const files = this.files;
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
@@ -295,6 +337,60 @@
                 };
                 reader.readAsDataURL(file);
             });
+        });
+
+        let colorIndex = {{ $product->colors->count() }};
+
+        $('#add-color').on('click', function() {
+            const html = `
+        <div class="flex gap-2 mb-2 items-center color-row">
+            <input type="text" name="colors[${colorIndex}][name]" placeholder="Color Name" class="form-control" required>
+            <div class="flex items-center gap-2">
+                <input type="color" name="colors[${colorIndex}][code]" class="form-control form-control-color" value="#000000" title="Choose your color" style="width: 50px; padding: 0; border: none; cursor: pointer;">
+                <input type="text" class="form-control color-hex-input" placeholder="#000000" value="#000000" style="width: 100px;">
+            </div>
+            <button type="button" class="tf-button-sm remove-color" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
+        </div>
+    `;
+            $('#colors-container').append(html);
+            colorIndex++;
+        });
+
+        $(document).on('click', '.remove-color', function() {
+            $(this).closest('.color-row').remove();
+        });
+
+        $(document).on('input', '.form-control-color', function() {
+            $(this).closest('.color-row').find('.color-hex-input').val($(this).val());
+        });
+
+        $(document).on('input', '.color-hex-input', function() {
+            $(this).closest('.color-row').find('.form-control-color').val($(this).val());
+        });
+
+
+        let sizeIndex = {{ $product->sizes->count() }};
+
+        $('#add-size').on('click', function() {
+            const html = `
+        <div class="flex gap-2 mb-2 items-center size-row">
+            <select name="sizes[${sizeIndex}][name]" class="form-control" required>
+                <option value="">Choose Size</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+            </select>
+            <button type="button" class="tf-button-sm remove-size" style="background: red; color: white;">X</button>
+        </div>
+    `;
+            $('#sizes-container').append(html);
+            sizeIndex++;
+        });
+
+        $(document).on('click', '.remove-size', function() {
+            $(this).closest('.size-row').remove();
         });
     </script>
 @endpush

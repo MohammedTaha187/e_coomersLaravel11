@@ -242,7 +242,7 @@
         const galPreview = document.getElementById('galPreview');
 
         galleryInput.addEventListener('change', function() {
-            galPreview.innerHTML = ''; 
+            galPreview.innerHTML = '';
             const files = this.files;
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
@@ -263,7 +263,7 @@
         });
 
 
-    
+
         let colorIndex = 0;
         $('#add-color').on('click', function() {
             const html = `
@@ -296,7 +296,14 @@
         $('#add-size').on('click', function() {
             const html = `
             <div class="flex gap-2 mb-2 items-center size-row">
-                <input type="text" name="sizes[${sizeIndex}][name]" placeholder="Size Name" class="form-control" required>
+                <select name="sizes[${sizeIndex}][name]" class="form-control" required>
+                    <option value="">Choose Size</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
                 <button type="button" class="tf-button-sm remove-size" style="background: red; color: white; border: none; padding: 5px 10px;">X</button>
             </div>
         `;

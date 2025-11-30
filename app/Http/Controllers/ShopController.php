@@ -7,7 +7,9 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\Size;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
@@ -85,13 +87,25 @@ class ShopController extends Controller
 
         $products = $products->orderBy($o_column, $o_order)->paginate($size);
 
-        return view('user.shop.index', compact('products', 'size', 'order', 'brands', 'f_brands', 'categories', 'f_categories', 'min_price', 'max_price', 'colors', 'f_colors', 'sizes', 'f_sizes'));
+        $wishlistItems = [];
+        if (Auth::check()) {
+            $wishlistItems = Wishlist::where('user_id', Auth::id())->pluck('id', 'product_id')->toArray();
+        }
+
+        return view('user.shop.index', compact('products', 'size', 'order', 'brands', 'f_brands', 'categories', 'f_categories', 'min_price', 'max_price', 'colors', 'f_colors', 'sizes', 'f_sizes', 'wishlistItems'));
     }
 
     public function productDetails($product_slug)
     {
         $product = Product::where('slug', $product_slug)->firstOrFail();
         $rproducts = Product::where('slug', '<>', $product_slug)->get()->take(8);
-        return view('user.shop.details', compact('product', 'rproducts'));
+
+        $wishlistItems = [];
+        if (Auth::check()) {
+            $wishlistItems = Wishlist::where('user_id', Auth::id())->pluck('id', 'product_id')->toArray();
+        }
+
+        return view('user.shop.details', compact('product', 'rproducts', 'wishlistItems'));
     }
 }
+            

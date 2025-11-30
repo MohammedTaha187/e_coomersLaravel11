@@ -17,7 +17,8 @@ class GalleryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'product_id' => \App\Models\Product::inRandomOrder()->first()->id ?? \App\Models\Product::factory(),
+            'image' => 'public/images/galleries/' . $this->faker->numberBetween(1, 6) . '.jpg',
         ];
     }
 }

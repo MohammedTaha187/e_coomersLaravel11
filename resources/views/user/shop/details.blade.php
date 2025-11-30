@@ -117,32 +117,57 @@
                     <div class="product-single__short-desc">
                         <p>{{ $product->short_description }}</p>
                     </div>
-                    @if(\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
-                    <a href="{{ route('user.cart.index') }}" class="btn btn-primary btn-addtocart ">Go to Cart</a>
+                    @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                        <a href="{{ route('user.cart.index') }}" class="btn btn-primary btn-addtocart ">Go to Cart</a>
                     @else
-                    <form name="addtocart-form" method="post" action="{{ route('user.cart.add') }}">
-                        @csrf
-                        <div class="product-single__addtocart">
-                            <div class="qty-control position-relative">
-                                <input type="number" name="quantity" value="1" min="1"
-                                    class="qty-control__number text-center">
-                                <div class="qty-control__reduce">-</div>
-                                <div class="qty-control__increase">+</div>
-                            </div><!-- .qty-control -->
-                            <input type="hidden" name="id" value="{{ $product->id }}">
-                            <input type="hidden" name="name" value="{{ $product->name }}">
-                            <input type="hidden" name="price" value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
-                            <button type="submit" class="btn btn-primary btn-addtocart "
-                                data-aside="cartDrawer">Add to
-                                Cart</button>
-                        </div>
-                    </form>
+                        <form name="addtocart-form" method="post" action="{{ route('user.cart.add') }}">
+                            @csrf
+                            <div class="product-single__addtocart">
+                                <div class="qty-control position-relative">
+                                    <input type="number" name="quantity" value="1" min="1"
+                                        class="qty-control__number text-center">
+                                    <div class="qty-control__reduce">-</div>
+                                    <div class="qty-control__increase">+</div>
+                                </div><!-- .qty-control -->
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <input type="hidden" name="name" value="{{ $product->name }}">
+                                <input type="hidden" name="price"
+                                    value="{{ $product->sale_price == '' ? $product->price : $product->sale_price }}">
+                                <button type="submit" class="btn btn-primary btn-addtocart " data-aside="cartDrawer">Add
+                                    to
+                                    Cart</button>
+                            </div>
+                        </form>
                     @endif
                     <div class="product-single__addtolinks">
-                        <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16"
-                                height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_heart" />
-                            </svg><span>Add to Wishlist</span></a>
+                        @if (isset($wishlistItems) && array_key_exists($product->id, $wishlistItems))
+                            <form method="POST"
+                                action="{{ route('user.wishlist.destroy', ['rowId' => $wishlistItems[$product->id]]) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="menu-link menu-link_us-s add-to-wishlist border-0 bg-transparent filled-heart">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#icon_heart" />
+                                    </svg>
+                                    <span>Remove from Wishlist</span>
+                                </button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('user.wishlist.store') }}">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <button type="submit"
+                                    class="menu-link menu-link_us-s add-to-wishlist border-0 bg-transparent">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#icon_heart" />
+                                    </svg>
+                                    <span>Add to Wishlist</span>
+                                </button>
+                            </form>
+                        @endif
                         <share-button class="share-button">
                             <button
                                 class="menu-link menu-link_us-s to-share border-0 bg-transparent d-flex align-items-center">
@@ -217,7 +242,7 @@
                             <p class="content">{{ $product->description }}</p>
                         </div>
                     </div>
-                     
+
                     <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
                         <h2 class="product-single__reviews-title">Reviews</h2>
                         <div class="product-single__reviews-list">
@@ -411,7 +436,7 @@
                                             width="330" height="400" alt="{{ $rproduct->name }}"
                                             class="pc__img pc__img-second">
                                     </a>
-                                        @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $rproduct->id)->count() > 0)
+                                    @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $rproduct->id)->count() > 0)
                                         <a href="{{ route('user.cart.index') }}"
                                             class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn btn-primary btn-addtocart ">Go
                                             to Cart</a>
@@ -422,8 +447,11 @@
                                             <input type="hidden" name="id" value="{{ $rproduct->id }}">
                                             <input type="hidden" name="quantity" value="1">
                                             <input type="hidden" name="name" value="{{ $rproduct->name }}">
-                                            <input type="hidden" name="price"value="{{ $rproduct->sale_price == '' ? $rproduct->price : $rproduct->sale_price }}">
-                                            <button type="submit"class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
+                                            <input type="hidden"
+                                                name="price"value="{{ $rproduct->sale_price == '' ? $rproduct->price : $rproduct->sale_price }}">
+                                            <button
+                                                type="submit"class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"
+                                                data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
                                         </form>
                                     @endif
                                 </div>
@@ -460,14 +488,34 @@
                                         <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
                                     </div>
 
-                                    <button
-                                        class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                        title="Add To Wishlist">
-                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_heart" />
-                                        </svg>
-                                    </button>
+                                    @if (isset($wishlistItems) && array_key_exists($rproduct->id, $wishlistItems))
+                                        <form method="POST"
+                                            action="{{ route('user.wishlist.destroy', ['rowId' => $wishlistItems[$rproduct->id]]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist filled-heart"
+                                                title="Remove from Wishlist">
+                                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_heart" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form method="POST" action="{{ route('user.wishlist.store') }}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $rproduct->id }}">
+                                            <button type="submit"
+                                                class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
+                                                title="Add To Wishlist">
+                                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_heart" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

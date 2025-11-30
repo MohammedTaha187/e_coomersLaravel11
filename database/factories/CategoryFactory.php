@@ -17,7 +17,10 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->unique()->word(),
+            'slug' => $this->faker->unique()->slug(),
+            'image' => 'public/images/categories/' . $this->faker->numberBetween(1, 6) . '.jpg',
+            'parent_id' => null,
         ];
     }
 }

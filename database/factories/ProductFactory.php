@@ -19,19 +19,24 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         $mainImages = [
-            'public/images/products/product-1.png',
-            'public/images/products/product-2.png',
-            'public/images/products/product-3.png',
-            'public/images/products/product-4.png',
-            'public/images/products/product-5.png',
+            'public/images/products/1.jpg',
+            'public/images/products/2.jpg',
+            'public/images/products/3.jpg',
+            'public/images/products/4.jpg',
+            'public/images/products/5.jpg',
+            'public/images/products/6.jpg',
         ];
 
         return [
             'name' => $this->faker->unique()->words(3, true),
             'slug' => $this->faker->unique()->slug(),
             'description' => $this->faker->paragraph(),
+            'short_description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 10, 1000),
+            'sale_price' => $this->faker->optional()->randomFloat(2, 10, 1000),
+            'sku' => $this->faker->unique()->ean8(),
             'quantity' => $this->faker->numberBetween(1, 100),
+            'stock' => $this->faker->randomElement(['in_stock', 'out_of_stock']),
             'image' => str_replace('public/', '', $this->faker->randomElement($mainImages)),
             'category_id' => Category::inRandomOrder()->first()->id ?? Category::factory(),
             'brand_id' => Brand::inRandomOrder()->first()->id ?? Brand::factory(),

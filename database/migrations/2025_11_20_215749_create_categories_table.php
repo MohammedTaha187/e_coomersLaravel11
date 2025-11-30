@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('slug')->unique();
-            $table->string('parent_id')->default();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
         });
     }

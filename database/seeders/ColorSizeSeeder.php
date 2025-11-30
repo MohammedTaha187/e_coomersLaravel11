@@ -15,6 +15,7 @@ class ColorSizeSeeder extends Seeder
      */
     public function run(): void
     {
+        $products = Product::all();
         $colors = [
             ['name' => 'Red', 'code' => '#FF0000'],
             ['name' => 'Blue', 'code' => '#0000FF'],
@@ -26,10 +27,6 @@ class ColorSizeSeeder extends Seeder
             ['name' => 'Purple', 'code' => '#800080'],
         ];
 
-        foreach ($colors as $color) {
-            \App\Models\Color::create($color);
-        }
-
         $sizes = [
             ['name' => 'XS'],
             ['name' => 'S'],
@@ -39,17 +36,16 @@ class ColorSizeSeeder extends Seeder
             ['name' => 'XXL'],
         ];
 
-        foreach ($sizes as $size) {
-            Size::create($size);
-        }
-
-        $products = Product::all();
-        $allColors = Color::all();
-        $allSizes = Size::all();
-
         foreach ($products as $product) {
-            $product->colors()->attach($allColors->random(rand(1, 3))->pluck('id')->toArray());
-            $product->sizes()->attach($allSizes->random(rand(1, 4))->pluck('id')->toArray());
+            $randomColors = collect($colors)->random(rand(1, 3));
+            foreach ($randomColors as $color) {
+                $product->colors()->create($color);
+            }
+
+            $randomSizes = collect($sizes)->random(rand(1, 4));
+            foreach ($randomSizes as $size) {
+                $product->sizes()->create($size);
+            }
         }
     }
 }

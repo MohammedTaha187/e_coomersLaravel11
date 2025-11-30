@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorewishlistRequest;
-use App\Http\Requests\UpdatewishlistRequest;
 use App\Models\Wishlist;
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Surfsidemedia\Shoppingcart\Facades\Cart;
 
 class WishlistController extends Controller
 {
@@ -13,54 +15,43 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        //
+        $wishlistItems = Wishlist::where('user_id', Auth::id())->with('product')->get();
+        return view('user.wishlist.index', compact('wishlistItems'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id' => 'required|exists:products,id',
+        ]);
+
+        Wishlist::firstOrCreate([
+            'user_id' => Auth::id(),
+            'product_id' => $request->id,
+        ]);
+
+        return redirect()->back()->with('status', 'Product added to wishlist!');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorewishlistRequest $request)
+    public function destroy($id)
     {
-        //
+        Wishlist::where('user_id', Auth::id())->where('id', $id)->delete();
+        return redirect()->back()->with('status', 'Product removed from wishlist!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Wishlist $wishlist)
+    public function empty()
     {
-        //
+        Wishlist::where('user_id', Auth::id())->delete();
+        return redirect()->back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Wishlist $wishlist)
+    public function moveToCart($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatewishlistRequest $request, Wishlist $wishlist)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Wishlist $wishlist)
-    {
-        //
+        $wishlist = Wishlist::where('user_id', Auth::id())->where('id', $id)->first();
+        if ($wishlist) {
+            Cart::instance('cart')->add($wishlist->product_id, $wishlist->product->name, 1, $wishlist->product->sale_price ?? $wishlist->product->regular_price)->associate(Product::class);
+            $wishlist->delete();
+        }
+        return redirect()->back();
     }
 }

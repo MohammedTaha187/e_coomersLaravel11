@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -275,7 +273,7 @@
 
             <div class="logo">
                 <a href="{{ route('user.home.index') }}">
-                    <img src="{{ asset('assets/images/logo.png')}}" alt="Uomo" class="logo__image d-block" />
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Uomo" class="logo__image d-block" />
                 </a>
             </div>
 
@@ -396,7 +394,8 @@
             <div class="header-desk header-desk_type_1">
                 <div class="logo">
                     <a href="{{ route('user.home.index') }}">
-                        <img src="{{ asset('assets/images/logo.png')}}" alt="Uomo" class="logo__image d-block" />
+                        <img src="{{ asset('assets/images/logo.png') }}" alt="Uomo"
+                            class="logo__image d-block" />
                     </a>
                 </div>
 
@@ -483,7 +482,7 @@
                         </div>
                     @else
                         <div class="header-tools__item hover-container">
-                            <a href="{{ Auth::user()->utype === 'ADM' ? route('admin.index'): route('user.index') }}"
+                            <a href="{{ Auth::user()->utype === 'ADM' ? route('admin.index') : route('user.index') }}"
                                 class="header-tools__item">
                                 <span class="pr-6px">{{ Auth::user()->name }}</span>
                                 <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -494,12 +493,17 @@
                         </div>
                     @endguest
 
-                    <a href="wishlist.html" class="header-tools__item">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                    <a href="{{ route('user.wishlist.index') }}" class="header-tools__item header-tools__cart">
+                        <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <use href="#icon_heart" />
                         </svg>
+                        @if ($wishlistCount > 0)
+                            <span
+                                class="cart-amount d-block position-absolute js-cart-items-count">{{ $wishlistCount }}</span>
+                        @endif
                     </a>
+
 
                     <a href="{{ route('user.cart.index') }}" class="header-tools__item header-tools__cart">
                         <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -507,7 +511,8 @@
                             <use href="#icon_cart" />
                         </svg>
                         @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->count() > 0)
-                            <span class="cart-amount d-block position-absolute js-cart-items-count">{{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->count() }}</span>
+                            <span
+                                class="cart-amount d-block position-absolute js-cart-items-count">{{ \Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->count() }}</span>
                         @endif
                     </a>
                 </div>
@@ -525,7 +530,8 @@
                 <div class="footer-column footer-store-info col-12 mb-4 mb-lg-0">
                     <div class="logo">
                         <a href="{{ route('user.home.index') }}">
-                            <img src="{{ asset('assets/images/logo.png')}}" alt="SurfsideMedia" class="logo__image d-block" />
+                            <img src="{{ asset('assets/images/logo.png') }}" alt="SurfsideMedia"
+                                class="logo__image d-block" />
                         </a>
                     </div>
                     <p class="footer-address">123 Beach Avenue, Surfside City, CA 00000</p>
@@ -656,7 +662,8 @@
     <footer class="footer-mobile container w-100 px-5 d-md-none bg-body">
         <div class="row text-center">
             <div class="col-4">
-                <a href="{{ route('user.home.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                <a href="{{ route('user.home.index') }}"
+                    class="footer-mobile__link d-flex flex-column align-items-center">
                     <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_home" />
@@ -666,7 +673,8 @@
             </div>
 
             <div class="col-4">
-                <a href="{{ route('user.shop.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                <a href="{{ route('user.shop.index') }}"
+                    class="footer-mobile__link d-flex flex-column align-items-center">
                     <svg class="d-block" width="18" height="18" viewBox="0 0 18 18" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <use href="#icon_hanger" />
@@ -676,21 +684,25 @@
             </div>
 
             <div class="col-4">
-                <a href="{{ route('user.home.index') }}" class="footer-mobile__link d-flex flex-column align-items-center">
+                <a href="{{ route('user.wishlist.index') }}"
+                    class="footer-mobile__link d-flex flex-column align-items-center">
                     <div class="position-relative">
                         <svg class="d-block" width="18" height="18" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <use href="#icon_heart" />
                         </svg>
-                        <span class="wishlist-amount d-block position-absolute js-wishlist-count">3</span>
+                        @if ($wishlistCount > 0)
+                            <span
+                                class="wishlist-amount d-block position-absolute js-wishlist-count">{{ $wishlistCount }}</span>
+                        @endif
                     </div>
                     <span>Wishlist</span>
                 </a>
             </div>
         </div>
     </footer>
-     
-     
+
+
     <div id="scrollTop" class="visually-hidden end-0"></div>
     <div class="page-overlay"></div>
 

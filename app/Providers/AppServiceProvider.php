@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('*', function ($view) {
+            if (\Illuminate\Support\Facades\Auth::check()) {
+                $wishlistCount = \App\Models\Wishlist::where('user_id', \Illuminate\Support\Facades\Auth::id())->count();
+                $view->with('wishlistCount', $wishlistCount);
+            } else {
+                $view->with('wishlistCount', 0);
+            }
+        });
     }
 }

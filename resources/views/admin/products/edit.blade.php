@@ -176,31 +176,26 @@
                     <fieldset>
                         <div class="wg-box mt-5">
                             <h3>Gallery Images</h3>
-                            <form action="{{ route('admin.galleries.store', $product->id) }}" method="POST"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <fieldset>
-                                    <div class="body-title mb-10">Upload Gallery Images</div>
-                                    <div class="upload-image mb-16">
-                                        <div id="galPreview" class="flex gap-2 flex-wrap"></div>
-                                        <div id="galUpload" class="item up-load">
-                                            <label class="uploadfile" for="galleryImages">
-                                                <span class="icon">
-                                                    <i class="icon-upload-cloud"></i>
-                                                </span>
-                                                <span class="text-tiny">
-                                                    Drop your images here or select
-                                                    <span class="tf-color">click to browse</span>
-                                                    <br> (Max 10 images)
-                                                </span>
-                                                <input type="file" id="galleryImages" name="gallery_images[]"
-                                                    accept="image/*" multiple>
-                                            </label>
-                                        </div>
+                            <fieldset>
+                                <div class="body-title mb-10">Upload Gallery Images</div>
+                                <div class="upload-image mb-16">
+                                    <div id="galPreview" class="flex gap-2 flex-wrap"></div>
+                                    <div id="galUpload" class="item up-load">
+                                        <label class="uploadfile" for="galleryImages">
+                                            <span class="icon">
+                                                <i class="icon-upload-cloud"></i>
+                                            </span>
+                                            <span class="text-tiny">
+                                                Drop your images here or select
+                                                <span class="tf-color">click to browse</span>
+                                                <br> (Max 10 images)
+                                            </span>
+                                            <input type="file" id="galleryImages" name="gallery_images[]"
+                                                accept="image/*" multiple>
+                                        </label>
                                     </div>
-                                </fieldset>
-                                <button type="submit" class="tf-button w-full">Upload Gallery</button>
-                            </form>
+                                </div>
+                            </fieldset>
 
                             <div class="flex items-center flex-wrap gap10 mt-4">
                                 @foreach ($product->galleries as $gallery)
@@ -208,17 +203,11 @@
                                         style="position: relative; inline-size: 100px; block-size: 100px;">
                                         <img src="{{ Storage::url($gallery->image) }}" alt="" class="effect8"
                                             style="inline-size: 100%; block-size: 100%; object-fit: cover;">
-                                        <form action="{{ route('admin.galleries.destroy', $gallery->id) }}"
-                                            method="POST" class="position-absolute top-0 end-0"
-                                            style="position: absolute; inset-block-start: 0; inset-inline-end: 0;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="tf-button-sm"
-                                                style="background: red; color: white; border: none; padding: 2px 5px; cursor: pointer;"
-                                                onclick="return confirm('Are you sure?')">
-                                                <i class="icon-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="tf-button-sm delete-gallery-btn"
+                                            data-route="{{ route('admin.galleries.destroy', $gallery->id) }}"
+                                            style="background: red; color: white; border: none; padding: 2px 5px; cursor: pointer; position: absolute; inset-block-start: 0; inset-inline-end: 0;">
+                                            <i class="icon-trash"></i>
+                                        </button>
                                     </div>
                                 @endforeach
                             </div>
@@ -289,11 +278,25 @@
             </form>
         </div>
     </div>
+
+    <form id="delete-gallery-form" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
+            $('.delete-gallery-btn').on('click', function() {
+                if (confirm('Are you sure you want to delete this image?')) {
+                    var route = $(this).data('route');
+                    var form = $('#delete-gallery-form');
+                    form.attr('action', route);
+                    form.submit();
+                }
+            });
+
             $("input[name='name']").on("input", function() {
                 const slug = $(this).val()
                     .toLowerCase()

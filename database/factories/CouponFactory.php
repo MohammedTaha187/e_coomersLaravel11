@@ -17,7 +17,11 @@ class CouponFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            // 'code' => strtoupper($this->faker->unique()->bothify('??###')),
+            // 'type' => $this->faker->randomElement(['fixed', 'percent']),
+            // 'value' => $this->faker->randomFloat(2, 5, 50),
+            // 'expiry_date' => $this->faker->dateTimeBetween('now', '+1 year'),
+            // 'is_active' => $this->faker->boolean(80),
         ];
     }
 }

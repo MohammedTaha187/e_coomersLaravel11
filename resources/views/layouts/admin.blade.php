@@ -129,7 +129,7 @@
                                             </a>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <a href="{{ route('admin.orders.create') }}" class="">
+                                            <a href="{{ route('admin.orders') }}" class="">
                                                 <div class="text">Order tracking</div>
                                             </a>
                                         </li>
@@ -298,7 +298,8 @@
                                                     </li>
                                                     <li class="product-item gap14 mb-10">
                                                         <div class="image no-bg">
-                                                            <img src="{{ asset('images/products/22.png') }}" alt="">
+                                                            <img src="{{ asset('images/products/22.png') }}"
+                                                                alt="">
                                                         </div>
                                                         <div class="flex items-center justify-between gap20 flex-grow">
                                                             <div class="name">
@@ -312,7 +313,8 @@
                                                     </li>
                                                     <li class="product-item gap14">
                                                         <div class="image no-bg">
-                                                            <img src="{{ asset('images/products/23.png') }}" alt="">
+                                                            <img src="{{ asset('images/products/23.png') }}"
+                                                                alt="">
                                                         </div>
                                                         <div class="flex items-center justify-between gap20 flex-grow">
                                                             <div class="name">
@@ -407,7 +409,8 @@
                                             id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="header-user wg-user">
                                                 <span class="image">
-                                                    <img src="{{ asset('images/avatar/user-1.png') }}" alt="">
+                                                    <img src="{{ asset('images/avatar/user-1.png') }}"
+                                                        alt="">
                                                 </span>
                                                 <span class="flex flex-column">
                                                     <span class="body-title mb-2">Kristin Watson</span>

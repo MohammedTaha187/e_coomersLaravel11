@@ -12,6 +12,11 @@ class Order extends Model
 
     protected $guarded = ['id' , 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'delivered_date' => 'datetime',
+        'canceled_date' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

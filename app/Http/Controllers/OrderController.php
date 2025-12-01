@@ -14,6 +14,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::orderBy("id", "desc")->paginate(10);
+
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -22,7 +23,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('admin.orders.create');
+        //
     }
 
     /**
@@ -36,9 +37,15 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show($order_id)
     {
-        //
+        $order = Order::find($order_id);
+        if (!$order) {
+            return redirect()->route('admin.orders')->with('error', 'Order not found!');
+        }
+        $orderItems = $order->orderItems()->orderBy('id')->paginate(12);
+        $transaction = $order->transaction;
+        return view('admin.orders.details', compact('order', 'orderItems', 'transaction'));
     }
 
     /**

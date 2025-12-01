@@ -95,5 +95,5 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
 
     // order routes
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders');
-    Route::get('/admin/orders/create', [OrderController::class, 'create'])->name('admin.orders.create');
+    Route::get('/admin/orders/{order_id}', [OrderController::class, 'show'])->name('admin.orders.show');
 });

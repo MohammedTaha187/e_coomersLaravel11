@@ -62,19 +62,20 @@
                             <tbody>
                                 @foreach ($orders as $order)
                                     <tr>
-                                        <td class="text-center">{{ $order->order_number }}</td>
-                                        <td class="text-center">{{ $order->user->name }}</td>
-                                        <td class="text-center">{{ $order->user->phone }}</td>
+                                        <td class="text-center">{{ $order->id }}</td>
+                                        <td class="text-center">{{ $order->name }}</td>
+                                        <td class="text-center">{{ $order->phone }}</td>
                                         <td class="text-center">{{ $order->subtotal }}</td>
                                         <td class="text-center">{{ $order->tax }}</td>
                                         <td class="text-center">{{ $order->total }}</td>
 
                                         <td class="text-center">{{ $order->status }}</td>
-                                        <td class="text-center">{{ $order->ordered_date->format('Y-m-d') }}</td>
-                                        <td class="text-center">{{ $order->total_items }}</td>
-                                        <td>{{ $order->delivered_date->format('Y-m-d') }}</td>
+                                        <td class="text-center">{{ $order->created_at->format('Y-m-d') }}</td>
+                                        <td class="text-center">{{ $order->orderItems->count() }}</td>
+                                        <td>{{ $order->delivered_date ? $order->delivered_date->format('Y-m-d') : '' }}
+                                        </td>
                                         <td class="text-center">
-                                            <a href="order-details.html">
+                                            <a href="{{ route('admin.orders.show', $order->id) }}">
                                                 <div class="list-icon-function view-icon">
                                                     <div class="item eye">
                                                         <i class="icon-eye"></i>
@@ -90,7 +91,7 @@
                 </div>
                 <div class="divider"></div>
                 <div class="flex items-center justify-between flex-wrap gap10 wgp-pagination">
-
+                    {{ $orders->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

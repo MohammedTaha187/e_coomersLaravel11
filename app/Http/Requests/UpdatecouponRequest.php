@@ -11,7 +11,7 @@ class UpdatecouponRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdatecouponRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'code' => 'required',
+            'type' => 'required',
+            'value' => 'required',
+            'cart_value' => 'required',
+            'expiry_date' => 'required',
         ];
     }
 }

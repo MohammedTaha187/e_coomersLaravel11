@@ -102,14 +102,14 @@
                                             <a href="{{ route('admin.products.destroy', $product->id) }}"
                                                 class="item text-danger delete"
                                                 onclick="event.preventDefault();
-            if(confirm('Are you sure you want to delete this product?')) {
-                document.getElementById('delete-product-{{ $product->id }}').submit();
-            }">
+                                                        if(confirm('Are you sure you want to delete this product?')) {
+                                                            document.getElementById('delete-product-{{ $product->id }}').submit();
+                                                        }">
                                                 <i class="icon-trash-2"></i>
                                             </a>
                                             <form id="delete-product-{{ $product->id }}"
-                                                action="{{ route('admin.products.destroy', $product->id) }}"
-                                                method="POST" style="display: none;">
+                                                action="{{ route('admin.products.destroy', $product->id) }}" method="POST"
+                                                style="display: none;">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>

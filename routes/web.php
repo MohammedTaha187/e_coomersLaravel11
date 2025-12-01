@@ -11,6 +11,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +31,10 @@ Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('user.car
 Route::put('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('user.cart.qty.increase');
 Route::put('/cart/decrease-quantity/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('user.cart.qty.decrease');
 Route::delete('/cart/remove', [CartController::class, 'remove_to_cart'])->name('user.cart.remove');
+Route::delete('/cart/remove', [CartController::class, 'remove_to_cart'])->name('user.cart.remove');
 Route::delete('/cart/empty', [CartController::class, 'empty_cart'])->name('user.cart.empty');
+Route::post('/cart/apply-coupon', [CartController::class, 'apply_coupon_code'])->name('user.cart.coupon.apply');
+Route::delete('/cart/remove-coupon', [CartController::class, 'remove_coupon_code'])->name('user.cart.coupon.remove');
 
 
 Route::middleware(['auth'])->group(function () {
@@ -39,6 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/wishlist/remove/{rowId}', [WishlistController::class, 'destroy'])->name('user.wishlist.destroy');
     Route::delete('/wishlist/empty', [WishlistController::class, 'empty'])->name('user.wishlist.empty');
     Route::post('/wishlist/move-to-cart/{rowId}', [WishlistController::class, 'moveToCart'])->name('user.wishlist.move.to.cart');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('user.checkout.index');
+    Route::post('/place-order', [CheckoutController::class, 'place_order'])->name('user.checkout.place_order');
 });
 
 Route::middleware(['auth', AuthAdmin::class])->group(function () {
@@ -75,6 +83,15 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
     // gallery routes
     Route::post('admin/products/{product}/gallery', [GalleryController::class, 'store'])->name('admin.galleries.store');
     Route::delete('admin/galleries/{gallery}', [GalleryController::class, 'destroy'])->name('admin.galleries.destroy');
+
+    // coupon routes
+    Route::get('/admin/coupons', [CouponController::class, 'index'])->name('admin.coupons');
+    Route::get('/admin/coupons/create', [CouponController::class, 'create'])->name('admin.coupons.create');
+    Route::post('/admin/coupons/store', [CouponController::class, 'store'])->name('admin.coupons.store');
+    Route::get('/admin/coupons/edit/{coupon}', [CouponController::class, 'edit'])->name('admin.coupons.edit');
+    Route::put('/admin/coupons/update/{coupon}', [CouponController::class, 'update'])->name('admin.coupons.update');
+    Route::delete('/admin/coupons/destroy/{coupon}', [CouponController::class, 'destroy'])->name('admin.coupons.destroy');
+    Route::get('/admin/coupons/search', [CouponController::class, 'search'])->name('admin.coupons.search');
 
     // order routes
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders');

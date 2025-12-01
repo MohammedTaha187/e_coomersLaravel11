@@ -13,15 +13,19 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->bigInteger('user_id')->unsigned();
+            $table->string('name');
             $table->string('phone');
-            $table->string('email');
+            $table->string('locality');
             $table->text('address');
             $table->string('city');
             $table->string('state');
-            $table->string('zipcode');
+            $table->string('country');
+            $table->string('landmark')->nullable();
+            $table->string('zip');
+            $table->string('type')->default('home');
+            $table->boolean('isdefault')->default(false);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

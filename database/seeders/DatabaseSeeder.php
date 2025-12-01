@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             BrandsTableSeeder::class,
             ProductsTableSeeder::class,
             ColorSizeSeeder::class,
+            CouponSeeder::class,
         ]);
     }
 }

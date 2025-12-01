@@ -13,29 +13,27 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('order_number')->uniqid();
+            $table->bigInteger('user_id')->unsigned();
+            $table->decimal('subtotal');
+            $table->decimal('discount')->default(0);
+            $table->decimal('tax');
+            $table->decimal('total');
             $table->string('name');
-            $table->decimal('subtotal', 10, 2);
-            $table->decimal('tax', 10, 2);
-            $table->decimal('discount', 10, 2)->default(0);
-            $table->decimal('total', 10, 2);
-            $table->enum('status',['ordered', 'pending', 'processing', 'delivered', 'canceled'])->default('ordered');
-            $table->enum('payment_mode' , ['cod', 'online']);
-            $table->string('shipping_firstname');
-            $table->string('shipping_lastname');
-            $table->string('shipping_email');
-            $table->string('shipping_phone');
-            $table->text('shipping_address');
-            $table->string('shipping_city');
-            $table->string('shipping_state');
-            $table->string('shipping_zipcode');
-            $table->timestamp('ordered_date')->nullable();
-            $table->timestamp('delivered_date')->nullable();
-            $table->timestamp('cancelled_date')->nullable();
-            $table->timestamp('deleted_at')->nullable();
-            
+            $table->string('phone');
+            $table->string('locality');
+            $table->text('address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('country');
+            $table->string('landmark')->nullable();
+            $table->string('zip');
+            $table->string('type')->default('home');
+            $table->enum('status', ['ordered', 'delivered', 'canceled'])->default('ordered');
+            $table->boolean('is_shipping_different')->default(false);
+            $table->date('delivered_date')->nullable();
+            $table->date('canceled_date')->nullable();
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -17,7 +17,7 @@ class AuthAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::check() && Auth::user()->utype === 'ADM') {
+            if (Auth::check() && (Auth::user()->utype === 'ADM' || Auth::user()->utype === 'OWN')) {
                 return $next($request);
             } else {
                 Session()->flash('error', 'Access Denied! You are not an Admin');

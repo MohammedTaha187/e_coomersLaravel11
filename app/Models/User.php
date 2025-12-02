@@ -23,7 +23,14 @@ class User extends Authenticatable
         'password',
         'mobile',
         'utype',
+        'image',
+        'is_blocked',
     ];
+
+    public function blockedInfo()
+    {
+        return $this->hasOne(BlockedUser::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

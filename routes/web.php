@@ -54,10 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/place-order', [CheckoutController::class, 'place_order'])->name('user.checkout.place_order');
 
     //user orders routes
-    Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
-    Route::get('/orders/{order_id}', [UserController::class, 'show'])->name('user.orders.show');
-    Route::put('/orders/cancel-order', [UserController::class, 'cancel_order'])->name('user.order.cancel');
-    Route::put('/orders/return-item', [UserController::class, 'return_item'])->name('user.order.item.return');
+    Route::get('/orders', [OrderController::class, 'userOrders'])->name('user.orders');
+    Route::get('/orders/{order_id}', [OrderController::class, 'userOrderDetails'])->name('user.orders.show');
+    Route::put('/orders/cancel-order', [OrderController::class, 'cancelOrder'])->name('user.order.cancel');
+    Route::put('/orders/return-item', [OrderController::class, 'returnItem'])->name('user.order.item.return');
 });
 
 Route::middleware(['auth', AuthAdmin::class])->group(function () {
@@ -116,4 +116,14 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
     Route::get('/admin/slides/edit/{id}', [SlideController::class, 'edit'])->name('admin.slides.edit');
     Route::put('/admin/slides/update', [SlideController::class, 'update'])->name('admin.slides.update');
     Route::delete('/admin/slides/{id}', [SlideController::class, 'destroy'])->name('admin.slides.destroy');
+
+    // user routes
+    Route::get('/admin/users', [UserController::class, 'userAdmin'])->name('admin.users');
+    Route::get('/admin/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit')->middleware('AuthOwner');
+    Route::put('/admin/users/update/{id}', [UserController::class, 'update'])->name('admin.users.update')->middleware('AuthOwner');
+
+    Route::get('/admin/users/blocked', [UserController::class, 'blockedUsers'])->name('admin.users.blocked');
+    Route::get('/admin/users/block/{id}', [UserController::class, 'block'])->name('admin.users.block');
+    Route::put('/admin/users/block/{id}', [UserController::class, 'storeBlock'])->name('admin.users.store-block');
+    Route::put('/admin/users/unblock/{id}', [UserController::class, 'unblock'])->name('admin.users.unblock');
 });

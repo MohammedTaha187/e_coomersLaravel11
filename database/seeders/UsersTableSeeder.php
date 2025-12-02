@@ -20,6 +20,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'utype' => 'ADM',
+            'mobile' => '1234567890',
         ]);
 
         // Customer User
@@ -28,6 +29,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'customer@example.com',
             'password' => Hash::make('password'),
             'utype' => 'USR',
+            'mobile' => '1234567890',
         ]);
 
         // Random Users

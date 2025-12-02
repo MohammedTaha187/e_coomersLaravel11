@@ -98,19 +98,16 @@ $(document).ready(function() {
         $("input[name='slug']").val(slug);
     });
 
-    // معاينة الصورة
     const photoInp = $("#myFile");
     const imgPreview = $("#imgpreview");
     const imgTag = $("#imgpreview img");
 
-    // عرض الصورة القديمة أولاً
     @if($brand->image)
         imgTag.attr("src", "{{ Storage::url($brand->image) }}");
         imgTag.attr("alt", "{{ $brand->name }}");
         imgPreview.show();
     @endif
 
-    // لو المستخدم رفع صورة جديدة
     if(photoInp.length) {
         photoInp.on("change", function() {
             const [file] = this.files;

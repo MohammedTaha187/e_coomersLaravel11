@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-
+use App\Http\Middleware\AuthOwner;
 // Override PHP limits for file uploads
 if (function_exists('ini_set')) {
     ini_set('upload_max_filesize', '100M');
@@ -19,7 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'AuthOwner' => AuthOwner::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

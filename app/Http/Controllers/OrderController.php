@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreorderRequest;
 use App\Http\Requests\UpdateorderRequest;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -90,5 +92,38 @@ class OrderController extends Controller
         }
 
         return back()->with('status', 'Status changed successfully!');
+    }
+    public function userOrders()
+    {
+        $orders = Order::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(10);
+        return view('user.orders.index', compact('orders'));
+    }
+
+    public function userOrderDetails($order_id)
+    {
+        $order = Order::find($order_id);
+        if (!$order) {
+            return redirect()->route('user.orders')->with('error', 'Order not found!');
+        }
+        $orderItems = $order->orderItems()->orderBy('id')->paginate(12);
+        $transaction = $order->transaction;
+        return view('user.orders.details', compact('order', 'orderItems', 'transaction'));
+    }
+
+    public function cancelOrder(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $order->status = 'canceled';
+        $order->canceled_date = \Carbon\Carbon::now();
+        $order->save();
+        return back()->with('status', 'Order has been canceled successfully!');
+    }
+
+    public function returnItem(Request $request)
+    {
+        $orderItem = OrderItem::find($request->item_id);
+        $orderItem->rstatus = true;
+        $orderItem->save();
+        return back()->with('status', 'Return request has been sent successfully!');
     }
 }

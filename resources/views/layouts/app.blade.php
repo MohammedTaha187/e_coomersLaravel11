@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.min.css') }}">
     @stack('styles')
 </head>
 
@@ -482,7 +483,7 @@
                         </div>
                     @else
                         <div class="header-tools__item hover-container">
-                            <a href="{{ Auth::user()->utype === 'ADM' ? route('admin.index') : route('user.index') }}"
+                            <a href="{{ Auth::user()->utype === 'ADM' || Auth::user()->utype === 'OWN' ? route('admin.index') : route('user.index') }}"
                                 class="header-tools__item">
                                 <span class="pr-6px">{{ Auth::user()->name }}</span>
                                 <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -712,6 +713,28 @@
     <script src="{{ asset('assets/js/plugins/swiper.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/countdown.js') }}"></script>
     <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script>
+        $(function() {
+            @if (Session::has('status'))
+                swal({
+                    title: "Success",
+                    text: "{{ Session::get('status') }}",
+                    icon: "success",
+                    button: "OK",
+                });
+            @endif
+
+            @if (Session::has('error'))
+                swal({
+                    title: "Error",
+                    text: "{{ Session::get('error') }}",
+                    icon: "error",
+                    button: "OK",
+                });
+            @endif
+        });
+    </script>
     @stack('scripts')
 </body>
 

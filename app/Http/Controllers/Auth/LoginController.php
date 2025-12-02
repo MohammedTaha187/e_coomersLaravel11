@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 
 class LoginController extends Controller
 {
@@ -26,6 +29,27 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+
+    /**
+     * Handle a successful authentication attempt.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return \Illuminate\Http\Response
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->is_blocked) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'Your account has been blocked. Please contact support at support@surfside.media');
+        }
+
+        if (Auth::user()->utype === 'ADM' || Auth::user()->utype === 'OWN') {
+            return redirect()->route('admin.index');
+        } else {
+            return redirect()->route('user.index');
+        }
+    }
 
     /**
      * Create a new controller instance.

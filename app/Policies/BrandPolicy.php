@@ -29,7 +29,7 @@ class BrandPolicy
      */
     public function create(User $user): bool
     {
-        return $user->utype === 'ADM'; 
+        return $user->utype === 'ADM' || $user->utype === 'OWN';
     }
 
     /**

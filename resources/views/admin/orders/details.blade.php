@@ -59,6 +59,35 @@
                         </tr>
                     </table>
                 </div>
+                @if ($order->status != 'canceled')
+                    <div class="wg-box mt-5">
+                        <h5>Update Order Status</h5>
+                        <form action="{{ route('admin.orders.status.update') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="select">
+                                        <select id="order_status" name="order_status">
+                                            <option value="ordered" {{ $order->status == 'ordered' ? 'selected' : '' }}>
+                                                Ordered
+                                            </option>
+                                            <option value="delivered"
+                                                {{ $order->status == 'delivered' ? 'selected' : '' }}>
+                                                Delivered</option>
+                                            <option value="canceled" {{ $order->status == 'canceled' ? 'selected' : '' }}>
+                                                Canceled</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary tf-button w208">Update Status</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                @endif
 
                 <div class="divider"></div>
                 <div class="flex items-center justify-between gap10 flex-wrap">
@@ -76,7 +105,6 @@
                                 <th class="text-center">SKU</th>
                                 <th class="text-center">Category</th>
                                 <th class="text-center">Brand</th>
-                                <th class="text-center">Options</th>
                                 <th class="text-center">Return Status</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -86,7 +114,7 @@
                                 <tr>
                                     <td class="pname">
                                         <div class="image">
-                                            <img src="{{ asset('uploads/products/thumbnails/' . $item->product->image) }}"
+                                            <img src="{{ $item->product->image ? Storage::url($item->product->image) : asset('images/placeholder.png') }}"
                                                 alt="{{ $item->product->name }}" class="image">
                                         </div>
                                         <div class="name">
@@ -96,17 +124,19 @@
                                     </td>
                                     <td class="text-center">${{ $item->price }}</td>
                                     <td class="text-center">{{ $item->quantity }}</td>
-                                    <td class="text-center">{{ $item->product->SKU }}</td>
+                                    <td class="text-center">{{ $item->product->sku }}</td>
                                     <td class="text-center">{{ $item->product->category->name }}</td>
                                     <td class="text-center">{{ $item->product->brand->name }}</td>
-                                    <td class="text-center">{{ $item->options }}</td>
                                     <td class="text-center">{{ $item->rstatus == 0 ? 'No' : 'Yes' }}</td>
                                     <td class="text-center">
-                                        <div class="list-icon-function view-icon">
-                                            <div class="item eye">
-                                                <i class="icon-eye"></i>
+                                        <a href="{{ route('user.shop.product-details', ['product_slug' => $item->product->slug]) }}"
+                                            target="_blank">
+                                            <div class="list-icon-function view-icon">
+                                                <div class="item eye">
+                                                    <i class="icon-eye"></i>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

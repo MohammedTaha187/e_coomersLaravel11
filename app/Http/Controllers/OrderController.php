@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreorderRequest;
 use App\Http\Requests\UpdateorderRequest;
 use App\Models\Order;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -70,5 +71,24 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+    public function update_status(Request $request)
+    {
+        $order = Order::find($request->order_id);
+        $order->status = $request->order_status;
+        if ($request->order_status == 'delivered') {
+            $order->delivered_date = \Carbon\Carbon::now();
+        } elseif ($request->order_status == 'canceled') {
+            $order->canceled_date = \Carbon\Carbon::now();
+        }
+        $order->save();
+
+        if ($request->order_status == 'delivered') {
+            $transaction = $order->transaction;
+            $transaction->status = 'approved';
+            $transaction->save();
+        }
+
+        return back()->with('status', 'Status changed successfully!');
     }
 }

@@ -386,7 +386,7 @@
                                                 <use href="#icon_next_sm" />
                                             </svg></span>
                                     </div>
-                                    @if (\Surfsidemedia\Shoppingcart\Facades\Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
+                                    @if (Cart::instance('cart')->content()->where('id', $product->id)->count() > 0)
                                         <a href="{{ route('user.cart.index') }}"
                                             class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium btn btn-primary btn-addtocart ">Go
                                             to Cart</a>

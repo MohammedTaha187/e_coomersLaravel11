@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SlideController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,15 +39,25 @@ Route::delete('/cart/remove-coupon', [CartController::class, 'remove_coupon_code
 
 
 Route::middleware(['auth'])->group(function () {
+    //user routes
     Route::get('/account-dashboard', [UserController::class, 'index'])->name('user.index');
+
+    //user wishlist routes
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('user.wishlist.index');
     Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('user.wishlist.store');
     Route::delete('/wishlist/remove/{rowId}', [WishlistController::class, 'destroy'])->name('user.wishlist.destroy');
     Route::delete('/wishlist/empty', [WishlistController::class, 'empty'])->name('user.wishlist.empty');
     Route::post('/wishlist/move-to-cart/{rowId}', [WishlistController::class, 'moveToCart'])->name('user.wishlist.move.to.cart');
 
+    //user checkout routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('user.checkout.index');
     Route::post('/place-order', [CheckoutController::class, 'place_order'])->name('user.checkout.place_order');
+
+    //user orders routes
+    Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
+    Route::get('/orders/{order_id}', [UserController::class, 'show'])->name('user.orders.show');
+    Route::put('/orders/cancel-order', [UserController::class, 'cancel_order'])->name('user.order.cancel');
+    Route::put('/orders/return-item', [UserController::class, 'return_item'])->name('user.order.item.return');
 });
 
 Route::middleware(['auth', AuthAdmin::class])->group(function () {
@@ -96,4 +107,13 @@ Route::middleware(['auth', AuthAdmin::class])->group(function () {
     // order routes
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders');
     Route::get('/admin/orders/{order_id}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::put('/admin/orders/update-status', [OrderController::class, 'update_status'])->name('admin.orders.status.update');
+
+    // slide routes
+    Route::get('/admin/slides', [SlideController::class, 'index'])->name('admin.slides');
+    Route::get('/admin/slides/create', [SlideController::class, 'create'])->name('admin.slides.create');
+    Route::post('/admin/slides/store', [SlideController::class, 'store'])->name('admin.slides.store');
+    Route::get('/admin/slides/edit/{id}', [SlideController::class, 'edit'])->name('admin.slides.edit');
+    Route::put('/admin/slides/update', [SlideController::class, 'update'])->name('admin.slides.update');
+    Route::delete('/admin/slides/{id}', [SlideController::class, 'destroy'])->name('admin.slides.destroy');
 });

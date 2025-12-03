@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
+use App\Models\Wishlist;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,11 +24,13 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view) {
             if (\Illuminate\Support\Facades\Auth::check()) {
-                $wishlistCount = \App\Models\Wishlist::where('user_id', \Illuminate\Support\Facades\Auth::id())->count();
+                $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
                 $view->with('wishlistCount', $wishlistCount);
             } else {
                 $view->with('wishlistCount', 0);
             }
+            $settings = Setting::first();
+            $view->with('settings', $settings);
         });
     }
 }

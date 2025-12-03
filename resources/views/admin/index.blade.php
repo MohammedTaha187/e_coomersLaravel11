@@ -21,7 +21,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Total Orders</div>
-                                        <h4>3</h4>
+                                        <h4>{{ $dashboardDatas['TotalOrders'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Total Amount</div>
-                                        <h4>481.34</h4>
+                                        <h4>${{ $dashboardDatas['TotalAmount'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Pending Orders</div>
-                                        <h4>3</h4>
+                                        <h4>{{ $dashboardDatas['TotalPendingOrders'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Pending Orders Amount</div>
-                                        <h4>481.34</h4>
+                                        <h4>${{ $dashboardDatas['TotalPendingAmount'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Delivered Orders</div>
-                                        <h4>0</h4>
+                                        <h4>{{ $dashboardDatas['TotalDeliveredOrders'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Delivered Orders Amount</div>
-                                        <h4>0.00</h4>
+                                        <h4>${{ $dashboardDatas['TotalDeliveredAmount'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Canceled Orders</div>
-                                        <h4>0</h4>
+                                        <h4>{{ $dashboardDatas['TotalCanceledOrders'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
                                     </div>
                                     <div>
                                         <div class="body-text mb-2">Canceled Orders Amount</div>
-                                        <h4>0.00</h4>
+                                        <h4>${{ $dashboardDatas['TotalCanceledAmount'] }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -224,28 +224,38 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">Divyansh Kumar</td>
-                                        <td class="text-center">1234567891</td>
-                                        <td class="text-center">$172.00</td>
-                                        <td class="text-center">$36.12</td>
-                                        <td class="text-center">$208.12</td>
+                                    @foreach ($orders as $order)
+                                        <tr>
+                                            <td class="text-center">{{ $order->id }}</td>
+                                            <td class="text-center">{{ $order->name }}</td>
+                                            <td class="text-center">{{ $order->phone }}</td>
+                                            <td class="text-center">${{ $order->subtotal }}</td>
+                                            <td class="text-center">${{ $order->tax }}</td>
+                                            <td class="text-center">${{ $order->total }}</td>
 
-                                        <td class="text-center">ordered</td>
-                                        <td class="text-center">2024-07-11 00:54:14</td>
-                                        <td class="text-center">2</td>
-                                        <td></td>
-                                        <td class="text-center">
-                                            <a href="#">
-                                                <div class="list-icon-function view-icon">
-                                                    <div class="item eye">
-                                                        <i class="icon-eye"></i>
+                                            <td class="text-center">
+                                                @if ($order->status == 'delivered')
+                                                    <span class="badge bg-success">Delivered</span>
+                                                @elseif($order->status == 'canceled')
+                                                    <span class="badge bg-danger">Canceled</span>
+                                                @else
+                                                    <span class="badge bg-warning">Ordered</span>
+                                                @endif
+                                            </td>
+                                            <td class="text-center">{{ $order->created_at }}</td>
+                                            <td class="text-center">{{ $order->orderItems->count() }}</td>
+                                            <td class="text-center">{{ $order->delivered_date }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('admin.orders.show', ['order_id' => $order->id]) }}">
+                                                    <div class="list-icon-function view-icon">
+                                                        <div class="item eye">
+                                                            <i class="icon-eye"></i>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

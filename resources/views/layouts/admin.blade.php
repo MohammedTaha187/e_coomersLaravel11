@@ -156,22 +156,25 @@
                                 </li>
 
                                 <li class="menu-item">
-                                    <a href="settings.html" class="">
+                                    <a href="{{ route('admin.settings') }}" class="">
                                         <div class="icon"><i class="icon-settings"></i></div>
                                         <div class="text">Settings</div>
                                     </a>
                                 </li>
-
                                 <li class="menu-item">
-                                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
-                                        @csrf
-                                        <a href="#" class=""
-                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                            <div class="icon"><i class="icon-log-out"></i></div>
-                                            <div class="text">Logout</div>
-                                        </a>
-                                    </form>
+                                    <a href="{{ route('admin.taskboard') }}" class="">
+                                        <div class="icon"><i class="icon-file-text"></i></div>
+                                        <div class="text">Taskboard</div>
+                                    </a>
                                 </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('admin.support') }}" class="">
+                                        <div class="icon"><i class="icon-help-circle"></i></div>
+                                        <div class="text">Support</div>
+                                    </a>
+                                </li>
+
+
                             </ul>
                         </div>
                     </div>
@@ -193,11 +196,12 @@
                                 </div>
 
 
-                                <form class="form-search flex-grow">
+                                <form class="form-search flex-grow" action="{{ route('admin.search') }}"
+                                    method="GET">
                                     <fieldset class="name">
                                         <input type="text" placeholder="Search here..." class="show-search"
-                                            name="name" tabindex="2" value="" aria-required="true"
-                                            required="">
+                                            name="query" tabindex="2" value="{{ request()->query('query') }}"
+                                            aria-required="true" required="">
                                     </fieldset>
                                     <div class="button-submit">
                                         <button class="" type="submit"><i class="icon-search"></i></button>
@@ -337,7 +341,10 @@
                                         <button class="btn btn-secondary dropdown-toggle" type="button"
                                             id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="header-item">
-                                                <span class="text-tiny">1</span>
+                                                @php
+                                                    $unreadNotifications = Auth::user()->unreadNotifications;
+                                                @endphp
+                                                <span class="text-tiny">{{ $unreadNotifications->count() }}</span>
                                                 <i class="icon-bell"></i>
                                             </span>
                                         </button>
@@ -346,56 +353,25 @@
                                             <li>
                                                 <h6>Notifications</h6>
                                             </li>
-                                            <li>
-                                                <div class="message-item item-1">
-                                                    <div class="image">
-                                                        <i class="icon-noti-1"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="body-title-2">Discount available</div>
-                                                        <div class="text-tiny">Morbi sapien massa, ultricies at rhoncus
-                                                            at, ullamcorper nec diam</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="message-item item-2">
-                                                    <div class="image">
-                                                        <i class="icon-noti-2"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="body-title-2">Account has been verified</div>
-                                                        <div class="text-tiny">Mauris libero ex, iaculis vitae rhoncus
-                                                            et</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="message-item item-3">
-                                                    <div class="image">
-                                                        <i class="icon-noti-3"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="body-title-2">Order shipped successfully</div>
-                                                        <div class="text-tiny">Integer aliquam eros nec sollicitudin
-                                                            sollicitudin</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="message-item item-4">
-                                                    <div class="image">
-                                                        <i class="icon-noti-4"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="body-title-2">Order pending: <span>ID 305830</span>
+                                            @foreach ($unreadNotifications->take(5) as $notification)
+                                                <li>
+                                                    <div class="message-item">
+                                                        <div class="image">
+                                                            <i class="icon-bell"></i>
                                                         </div>
-                                                        <div class="text-tiny">Ultricies at rhoncus at ullamcorper
+                                                        <div>
+                                                            <div class="body-title-2">
+                                                                {{ $notification->data['message'] ?? 'New Notification' }}
+                                                            </div>
+                                                            <div class="text-tiny">
+                                                                {{ $notification->created_at->diffForHumans() }}</div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </li>
+                                            @endforeach
+                                            <li><a href="{{ route('admin.notifications') }}"
+                                                    class="tf-button w-full">View all</a>
                                             </li>
-                                            <li><a href="#" class="tf-button w-full">View all</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -409,19 +385,19 @@
                                             id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span class="header-user wg-user">
                                                 <span class="image">
-                                                    <img src="{{ asset('images/avatar/user-1.png') }}"
+                                                    <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/placeholder.png') }}"
                                                         alt="">
                                                 </span>
                                                 <span class="flex flex-column">
-                                                    <span class="body-title mb-2">Kristin Watson</span>
-                                                    <span class="text-tiny">Admin</span>
+                                                    <span class="body-title mb-2">{{ Auth::user()->name }}</span>
+                                                    <span class="text-tiny">{{ Auth::user()->utype }}</span>
                                                 </span>
                                             </span>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end has-content"
                                             aria-labelledby="dropdownMenuButton3">
                                             <li>
-                                                <a href="#" class="user-item">
+                                                <a href="{{ route('admin.profile') }}" class="user-item">
                                                     <div class="icon">
                                                         <i class="icon-user"></i>
                                                     </div>
@@ -429,16 +405,16 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" class="user-item">
+                                                <a href="{{ route('admin.contacts') }}" class="user-item">
                                                     <div class="icon">
                                                         <i class="icon-mail"></i>
                                                     </div>
                                                     <div class="body-title-2">Inbox</div>
-                                                    <div class="number">27</div>
+                                                    <div class="number">{{ $unreadNotifications->count() }}</div>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="#" class="user-item">
+                                                <a href="{{ route('admin.taskboard') }}" class="user-item">
                                                     <div class="icon">
                                                         <i class="icon-file-text"></i>
                                                     </div>
@@ -454,7 +430,8 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="login.html" class="user-item">
+                                                <a href="#" class="user-item"
+                                                    onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                                     <div class="icon">
                                                         <i class="icon-log-out"></i>
                                                     </div>
@@ -509,7 +486,5 @@
     </script>
     @stack('scripts')
 </body>
-
-
 
 </html>

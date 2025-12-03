@@ -1,134 +1,93 @@
 # E-Commerce Project Summary
 
-This document outlines the features and implementations completed in the E-Commerce project.
+This document outlines the detailed features and implementations completed in the E-Commerce project, covering both the Admin Panel and the User Shop.
 
 ## 1. Authentication & User Management
 - **System**: Standard Laravel Authentication (Login, Register, Password Reset).
 - **Roles**:
-  - **Admin**: Access to the backend dashboard.
-  - **User**: Access to the frontend shop, cart, and checkout.
+  - **User**: Access to the frontend shop, cart, wishlist, and checkout.
+  - **Admin**: Access to the backend dashboard to manage the store.
+  - **Owner**: Super-admin with exclusive rights to manage other admins and users.
 
 ## 2. Admin Panel
-The admin panel allows management of the store's core data.
+The admin panel allows comprehensive management of the store's core data and settings.
 
-### Brands
-- CRUD operations (Create, Read, Update, Delete)
-- Image upload support
+### Product & Inventory Management
+- **Brands**: Create, update, delete, and search for brands with image upload support.
+- **Categories**: Manage product categories with images.
+- **Products**:
+  - Full CRUD operations.
+  - Multiple image gallery support.
+  - Attributes: Colors and Sizes.
+  - Pricing: Regular and Sale prices.
+  - Stock Management: Quantity and Stock Status.
+- **Coupons**:
+  - Create fixed or percentage-based coupons.
+  - Set expiry dates and minimum cart values.
 
-### Categories
-- CRUD operations
-- Image upload support
+### Order Management
+- **Orders**: View order lists, details (items, address, totals), and update order status (Delivered, Canceled, Processing).
 
-### Products
-- CRUD operations
-- Support for multiple images (Gallery)
-- Attributes: Colors and Sizes (Many-to-Many relationship)
-- Pricing: Regular and Sale prices
-- Stock management (Quantity, Stock Status)
+### Content & Display Management
+- **Slides (Home Slider)**: Manage homepage slider images, titles, and links with active/inactive status.
+- **Settings**: Manage site contact information (Address, Email, Phone) and social media links displayed in the footer.
 
-### Coupons
-- CRUD operations
-- Types: Fixed and Percent
-- Expiry date and Cart Value validation
-
-### Orders
-- View list of orders
-
-### Slides (Home Slider)
-- CRUD operations
-- Image upload with validation
-- Search functionality
-- Status management (Active/Inactive)
+### User & Support Management
+- **Users**:
+  - View user list.
+  - **Blocking System**: Block users to prevent login, with a specific reason.
+  - **Owner Protection**: Prevents the Owner from being demoted or blocked.
+- **Contacts**: View and reply to messages sent via the contact form.
+- **Support Tickets**: Track and manage support tickets (Open/Closed status).
+- **Task Board**: Internal to-do list for admins to track tasks (Todo, In Progress, Done).
+- **Notifications**: System notifications for admins to stay updated on important events.
 
 ## 3. Frontend (User Shop)
 
-### Home Page
-- Landing page showcasing categories, products, and slides.
+### Browsing & Display
+- **Home Page**: Features the slider, latest products, and featured categories.
+- **Shop Page**: Lists all products with pagination.
+- **Product Details**: Full product specifications, image gallery, related products, and color/size selection.
 
-### Shop Page
-- Lists all products
-- Pagination support
-- Individual Product Details Page:
-  - Full product info
-  - Image gallery
-  - Related products
-
-### Wishlist
-- Add products to wishlist
-- Move products from wishlist to cart
-- Remove items
-
-### Shopping Cart
-- Add products with quantity
-- Update item quantities
-- Remove items
-- Clear entire cart
-- **Coupons**:
-  - Apply and remove coupons
-  - Validation (expiry date, minimum cart value)
-- Dynamic totals calculation:
-  - Subtotal, Discount, VAT, Total
+### Cart & Wishlist
+- **Shopping Cart**:
+  - Add items, update quantities, remove items.
+  - Apply coupons with dynamic calculation of Subtotal, Discount, Tax, and Total.
+- **Wishlist**: Save products for later, with the ability to move them to the cart.
 
 ### Checkout
-- Multi-step checkout UI
-- Shipping Address form (auto-filled for users with a saved default address)
-- Order Summary display
-- Payment Methods:
-  - Cash on Delivery (COD)
-  - Card
-  - PayPal
-- **Order Placement**:
-  - Saves Order details
-  - Saves Order Items
-  - Records Transaction (defaulting to 'pending' for COD)
-  - Clears Cart and Session data upon success
+- Multi-step checkout interface.
+- **Addresses**: Select saved addresses or add a new one.
+- **Payment Methods**: Cash on Delivery (COD), Card, PayPal.
+- **Order Summary**: Final review of items and costs before placement.
 
-## 5. Advanced User Management & Security
-### Role-Based Access Control (RBAC)
-- **Roles**:
-  - **User (USR)**: Standard customer access.
-  - **Admin (ADM)**: Backend management access.
-  - **Owner (OWN)**: Super-admin with exclusive rights to manage other admins and users.
-- **Middleware**: Custom `AuthAdmin` and `AuthOwner` middleware to secure routes.
-- **Protection**:
-  - Owners cannot demote themselves (Self-demotion prevention).
-  - User details (Name, Email, Mobile) are read-only in the admin panel to prevent accidental edits.
+### User Dashboard
+- **Orders**: Track order history, cancel orders, or request item returns.
+- **Addresses**: Manage shipping addresses (Create, Edit, Delete).
+- **Account Details**: Update name and password.
 
-### User Blocking System
-- **Functionality**:
-  - Admins/Owners can block users with a specific reason.
-  - Blocked users are immediately logged out and prevented from logging in.
-  - Login attempt displays a custom error message with support contact info.
-- **Database**:
-  - `is_blocked` flag in `users` table.
-  - `blocked_users` table tracks blocker ID, blocked user ID, and reason.
-- **Views**:
-  - Dedicated "Blocked Users" list with "Unblock" functionality.
+## 4. UI/UX Improvements
+- **Interactive Alerts**: Integrated **SweetAlert2** for beautiful success and error popups.
+- **Smart Redirection**: Automatically redirects users after login based on their role (Admin to Dashboard, User to Home).
+- **Search**: Header search bar for products and internal search in the admin panel.
 
-## 6. UI/UX Improvements
-- **Notifications**: Integrated **SweetAlert2** for beautiful, interactive success and error popups (replacing standard flash messages).
-- **Dashboard Redirection**: Smart redirection after login based on user role (Admin/Owner -> Dashboard, User -> Home).
-
-## 7. Database Schema
-
+## 5. Database Schema
 Key tables implemented:
+- `users`: Extended with `utype` (role) and `is_blocked` fields.
+- `products`, `categories`, `brands`: Core store data.
+- `product_images`, `product_attributes`: Product details.
+- `orders`, `order_items`, `transactions`: Sales management.
+- `coupons`: Discount system.
+- `slides`: Homepage slider.
+- `contacts`, `tickets`: Support and communication.
+- `tasks`: Admin task management.
+- `settings`: General site settings.
+- `addresses`: User shipping addresses.
 
-- `users` (extended with `utype`, `is_blocked`)
-- `blocked_users`
-- `brands`, `categories`, `products`
-- `product_images`
-- `colors`, `sizes`, `product_color`, `product_size`
-- `coupons`
-- `orders`
-- `order_items`
-- `transactions`
-- `addresses`
-- `slides`
-
-## 8. Key Technologies
+## 6. Key Technologies
 - **Framework**: Laravel 11
-- **Templating**: Blade
-- **Cart Library**: `surfsidemedia/shoppingcart`
+- **Frontend**: Blade Templates, Bootstrap, Custom CSS
 - **Database**: MySQL
-- **Frontend**: Bootstrap / Custom CSS
-- **Alerts**: SweetAlert2
+- **Libraries**:
+  - `surfsidemedia/shoppingcart` (Cart management)
+  - `sweetalert2` (Notifications)

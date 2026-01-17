@@ -3,7 +3,7 @@
         "laravel-boost": {
             "command": "/home/muhammad/.config/herd-lite/bin/php",
             "args": [
-                "/home/muhammad/Downloads/E-Commerce-Project-Blade/E-Commerce-Project-BladeLaravel11/artisan",
+                "/media/muhammad/moDI1/THE PROJECT/the project me/E-Commerce-Project-BladeLaravel11/artisan",
                 "boost:mcp"
             ]
         }

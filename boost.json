@@ -4,12 +4,15 @@
         "codex",
         "copilot",
         "cursor",
+        "gemini",
         "opencode",
         "phpstorm"
     ],
     "editors": [
         "claude_code",
+        "codex",
         "cursor",
+        "gemini",
         "opencode",
         "phpstorm",
         "vscode"

@@ -8,7 +8,23 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('meta_title', config('app.name', 'Surface Media'))</title>
+    <meta name="keywords" content="@yield('meta_keywords', 'ecommerce, fashion, shopping')">
+    <meta name="description" content="@yield('meta_description', 'Discover the best products at Surface Media.')">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('meta_title', config('app.name', 'Surface Media'))">
+    <meta property="og:description" content="@yield('meta_description', 'Discover the best products at Surface Media.')">
+    <meta property="og:image" content="@yield('meta_image', asset('assets/images/logo.png'))">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('meta_title', config('app.name', 'Surface Media'))">
+    <meta property="twitter:description" content="@yield('meta_description', 'Discover the best products at Surface Media.')">
+    <meta property="twitter:image" content="@yield('meta_image', asset('assets/images/logo.png'))">
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="surfside media" />
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
@@ -24,6 +40,14 @@
         integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.min.css') }}">
+    <link rel="manifest" href="/manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
+    </script>
     @stack('styles')
 </head>
 

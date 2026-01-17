@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('meta_title', $product->meta_title ?? $product->name . ' - ' . config('app.name'))
+@section('meta_description', $product->meta_description ?? $product->short_description)
+@section('meta_keywords', $product->meta_keywords ?? $product->name . ', fashion, shop')
+@section('meta_image', Storage::url($product->image))
+
 @section('content')
     <main class="pt-90">
         <div class="mb-md-1 pb-md-3"></div>

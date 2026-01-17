@@ -27,6 +27,7 @@ class UpdateproductRequest extends FormRequest
             'short_description' => 'required|string',
             'description' => 'required|string',
             'image' => 'nullable|image',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'regular_price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0|lt:regular_price',
             'sku' => 'required|string|max:100|unique:products,sku,'.$this->route('product')->id,
@@ -37,6 +38,9 @@ class UpdateproductRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'gallery_images' => 'nullable|array|max:10',
             'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string|max:255',
         ];
     }
 }

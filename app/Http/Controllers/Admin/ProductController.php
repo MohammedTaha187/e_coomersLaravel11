@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\StoreproductRequest;
 use App\Http\Requests\UpdateproductRequest;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Product;
 use App\Models\Color;
+use App\Models\Product;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +46,7 @@ class ProductController extends Controller
     public function store(StoreproductRequest $request)
     {
 
-        $product = new product();
+        $product = new product;
         $product->name = $request->name;
         $product->slug = $request->slug;
         $product->short_description = $request->short_description;
@@ -60,9 +59,12 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        $product->meta_keywords = $request->meta_keywords;
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $imageName = time().'_'.$request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('images/products', $imageName, 'public');
             $product->image = $path;
         }
@@ -74,7 +76,7 @@ class ProductController extends Controller
                 if (isset($colorData['name']) && isset($colorData['code'])) {
                     $product->colors()->create([
                         'name' => $colorData['name'],
-                        'code' => $colorData['code']
+                        'code' => $colorData['code'],
                     ]);
                 }
             }
@@ -84,7 +86,7 @@ class ProductController extends Controller
             foreach ($request->sizes as $sizeData) {
                 if (isset($sizeData['name'])) {
                     $product->sizes()->create([
-                        'name' => $sizeData['name']
+                        'name' => $sizeData['name'],
                     ]);
                 }
             }
@@ -92,11 +94,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
-                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                $imageName = time().'_'.uniqid().'_'.$image->getClientOriginalName();
                 $path = $image->storeAs('images/galleries', $imageName, 'public');
 
                 $product->galleries()->create([
-                    'image' => $path
+                    'image' => $path,
                 ]);
             }
         }
@@ -142,9 +144,12 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         $product->brand_id = $request->brand_id;
         $product->category_id = $request->category_id;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        $product->meta_keywords = $request->meta_keywords;
 
         if ($request->hasFile('image')) {
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $imageName = time().'_'.$request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('images/products', $imageName, 'public');
             $product->image = $path;
         }
@@ -152,25 +157,25 @@ class ProductController extends Controller
         $product->save();
 
         // Update Colors
-        $product->colors()->delete(); 
+        $product->colors()->delete();
         if ($request->has('colors') && is_array($request->colors)) {
             foreach ($request->colors as $colorData) {
                 if (isset($colorData['name']) && isset($colorData['code'])) {
                     $product->colors()->create([
                         'name' => $colorData['name'],
-                        'code' => $colorData['code']
+                        'code' => $colorData['code'],
                     ]);
                 }
             }
         }
 
         // Update Sizes
-        $product->sizes()->delete(); 
+        $product->sizes()->delete();
         if ($request->has('sizes') && is_array($request->sizes)) {
             foreach ($request->sizes as $sizeData) {
                 if (isset($sizeData['name'])) {
                     $product->sizes()->create([
-                        'name' => $sizeData['name']
+                        'name' => $sizeData['name'],
                     ]);
                 }
             }
@@ -178,11 +183,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
-                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                $imageName = time().'_'.uniqid().'_'.$image->getClientOriginalName();
                 $path = $image->storeAs('images/galleries', $imageName, 'public');
 
                 $product->galleries()->create([
-                    'image' => $path
+                    'image' => $path,
                 ]);
             }
         }

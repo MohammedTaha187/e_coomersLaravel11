@@ -162,30 +162,22 @@
                             <div class="mb-2">
                                 <div class="block-legend">
                                     <div class="dot t1"></div>
-                                    <div class="text-tiny">Revenue</div>
+                                    <div class="text-tiny">Revenue (Last 30 Days)</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>$37,802</h4>
-                                <div class="box-icon-trending up">
-                                    <i class="icon-trending-up"></i>
-                                    <div class="body-title number">0.56%</div>
-                                </div>
+                                <h4>${{ $revenueData->sum() }}</h4>
                             </div>
                         </div>
                         <div>
                             <div class="mb-2">
                                 <div class="block-legend">
                                     <div class="dot t2"></div>
-                                    <div class="text-tiny">Order</div>
+                                    <div class="text-tiny">Orders (Last 30 Days)</div>
                                 </div>
                             </div>
                             <div class="flex items-center gap10">
-                                <h4>$28,305</h4>
-                                <div class="box-icon-trending up">
-                                    <i class="icon-trending-up"></i>
-                                    <div class="body-title number">0.56%</div>
-                                </div>
+                                <h4>{{ $orderCountData->sum() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -266,4 +258,108 @@
         </div>
 
     </div>
+    @push('scripts')
+        <script>
+            (function($) {
+                var tfLineChart = (function() {
+
+                    var chartBar = function() {
+
+                        var options = {
+                            series: [{
+                                    name: 'Total Revenue',
+                                    data: [{{ implode(',', $revenueData->toArray()) }}]
+                                },
+                                {
+                                    name: 'Total Orders',
+                                    data: [{{ implode(',', $orderCountData->toArray()) }}]
+                                }
+                            ],
+                            chart: {
+                                type: 'area',
+                                height: 325,
+                                toolbar: {
+                                    show: false,
+                                },
+                            },
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: '10px',
+                                    endingShape: 'rounded'
+                                },
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            legend: {
+                                show: false,
+                            },
+                            stroke: {
+                                show: true,
+                                width: 2,
+                                curve: 'smooth',
+                                colors: ['transparent']
+                            },
+                            grid: {
+                                show: false,
+                            },
+                            xaxis: {
+                                categories: [{!! "'" . implode("','", $labelData->toArray()) . "'" !!}],
+                                labels: {
+                                    style: {
+                                        colors: '#95989D',
+                                        fontSize: '13px',
+                                        fontFamily: 'Inter, sans-serif',
+                                        fontWeight: 400,
+                                    },
+                                },
+                                fill: {
+                                    opacity: 1,
+                                    colors: ['#2377FC', '#FFA800']
+                                }
+                            },
+                            yaxis: {
+                                show: false,
+                            },
+                            fill: {
+                                opacity: 1,
+                                colors: ['#2377FC', '#FFA800']
+                            },
+                            tooltip: {
+                                y: {
+                                    formatter: function(val) {
+                                        return "$ " + val + ""
+                                    }
+                                }
+                            }
+                        };
+
+                        var chart = new ApexCharts(document.querySelector("#line-chart-8"), options);
+                        chart.render();
+                    }
+
+                    /* Function ============ */
+                    return {
+                        init: function() {},
+
+                        load: function() {
+                            chartBar();
+                        },
+                        resize: function() {}
+                    }
+
+                })();
+
+                jQuery(window).on('load', function() {
+                    tfLineChart.load();
+                });
+
+                jQuery(window).on('resize', function() {
+                    tfLineChart.resize();
+                });
+
+            })(jQuery);
+        </script>
+    @endpush
 @endsection

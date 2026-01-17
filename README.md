@@ -75,12 +75,9 @@ A modern, high-performance e-commerce platform built with **Laravel 11**, **Blad
 ## 🗺 Roadmap (Upcoming Features)
 
 The following features are identified for future development:
-- [ ] **Payment Integration**: Implement Stripe, PayPal, and local payment gateways.
-- [ ] **Automated Emails**: Mailables for order confirmations and status updates.
-- [ ] **SEO Suite**: Dynamic Meta tags and OpenGraph support for products.
-- [ ] **Advanced Analytics**: Visual charts for revenue and visitor trends.
-- [ ] **Social Login**: Google, Facebook, and Twitter authentication via Socialite.
-- [ ] **PWA Support**: Offline capabilities and mobile "Add to Home Screen".
+- [ ] **Payment Integration** (Stripe & PayPal)
+- [ ] **Automated Email System** (Order Confirmations)
+- [ ] **Social Login** (Google & Facebook)
 
 ---
 

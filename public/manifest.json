@@ -1,0 +1,23 @@
+{
+    "name": "Surface Media E-Commerce",
+    "short_name": "Surface",
+    "description": "Premium E-Commerce Marketplace built with Laravel 11",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2377fc",
+    "icons": [
+        {
+            "src": "/images/logo/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/images/logo/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

@@ -111,6 +111,26 @@
                             required="">{{ old('description') }}</textarea>
                         <div class="text-tiny">Provide detailed information about the product.</div>
                     </fieldset>
+
+                    <div class="divider mb-20"></div>
+                    <h5 class="mb-20">SEO Optimization</h5>
+
+                    <fieldset class="name">
+                        <div class="body-title mb-10">Meta Title</div>
+                        <input class="mb-10" type="text" placeholder="Enter meta title" name="meta_title"
+                            value="{{ old('meta_title') }}">
+                    </fieldset>
+
+                    <fieldset class="name">
+                        <div class="body-title mb-10">Meta Keywords</div>
+                        <input class="mb-10" type="text" placeholder="Enter meta keywords (comma separated)"
+                            name="meta_keywords" value="{{ old('meta_keywords') }}">
+                    </fieldset>
+
+                    <fieldset class="description">
+                        <div class="body-title mb-10">Meta Description</div>
+                        <textarea class="mb-10 ht-100" name="meta_description" placeholder="Enter meta description">{{ old('meta_description') }}</textarea>
+                    </fieldset>
                 </div>
                 <div class="wg-box">
                     <fieldset>
